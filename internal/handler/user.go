@@ -7,7 +7,11 @@ import (
 	"github.com/michaeljang94/zikeeper/internal/service"
 )
 
-func GetUser(c *gin.Context) {
+type UserHandler struct {
+	Service *service.UserService
+}
+
+func (handler *UserHandler) GetUser(c *gin.Context) {
 	var getUserRequest service.GetUserRequest
 
 	if err := c.ShouldBindJSON(&getUserRequest); err != nil {
@@ -15,12 +19,17 @@ func GetUser(c *gin.Context) {
 		return
 	}
 
-	getUserResponse := service.GetUser(getUserRequest)
+	getUserResponse, err := handler.Service.GetUser(getUserRequest)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
 
 	c.JSON(http.StatusOK, getUserResponse)
 }
 
-func CreateUser(c *gin.Context) {
+func (handler *UserHandler) CreateUser(c *gin.Context) {
 	var request service.CreateUserRequest
 
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -28,7 +37,15 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	response := service.CreateUser(request)
+	response, err := handler.Service.CreateUser(request)
+
+	if err != nil {
+		if err.Error() == "duplicate entry" {
+			c.JSON(http.StatusConflict, "duplicate entry")
+		}
+
+		return
+	}
 
 	c.JSON(http.StatusOK, response)
 }

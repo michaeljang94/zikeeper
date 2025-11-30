@@ -1,6 +1,12 @@
 package service
 
-import "github.com/michaeljang94/zikeeper/internal/repo"
+import (
+	"fmt"
+
+	"github.com/google/uuid"
+
+	"github.com/michaeljang94/zikeeper/internal/repo"
+)
 
 type User struct {
 	Id    string `json:"id"`
@@ -31,12 +37,20 @@ type CreateUserResponse struct {
 	User User `json:"user"`
 }
 
-func GetUser(request GetUserRequest) GetUserResponse {
+type UserService struct {
+	Repo *repo.UserRepo
+}
+
+func (service *UserService) GetUser(request GetUserRequest) (GetUserResponse, error) {
 	repoRequest := repo.GetUserRequest{
 		Id: request.Id,
 	}
 
-	response := repo.GetUser(repoRequest)
+	response, err := service.Repo.GetUser(repoRequest)
+
+	if err != nil {
+		return GetUserResponse{}, err
+	}
 
 	return GetUserResponse{
 		User: User{
@@ -44,19 +58,28 @@ func GetUser(request GetUserRequest) GetUserResponse {
 			Name:  response.User.Name,
 			Score: response.User.Score,
 		},
-	}
+	}, nil
 }
 
-func GetUsers(request GetUserRequest) GetUsersResponse {
+func (service *UserService) GetUsers(request GetUserRequest) GetUsersResponse {
 	return GetUsersResponse{}
 }
 
-func CreateUser(request CreateUserRequest) CreateUserResponse {
+func (service *UserService) CreateUser(request CreateUserRequest) (CreateUserResponse, error) {
+	id := uuid.New()
+
 	repoRequest := repo.CreateUserRequest{
-		Name: request.Name,
+		Id:    id.String(),
+		Name:  request.Name,
+		Score: 0,
 	}
 
-	response := repo.CreateUser(repoRequest)
+	response, err := service.Repo.CreateUser(repoRequest)
+
+	if err != nil {
+		fmt.Println(err)
+		return CreateUserResponse{}, err
+	}
 
 	return CreateUserResponse{
 		User: User{
@@ -64,5 +87,5 @@ func CreateUser(request CreateUserRequest) CreateUserResponse {
 			Name:  response.User.Name,
 			Score: response.User.Score,
 		},
-	}
+	}, nil
 }
