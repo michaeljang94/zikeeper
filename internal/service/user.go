@@ -24,9 +24,11 @@ type GetUsersResponse struct {
 }
 
 type CreateUserRequest struct {
+	Name string `json:"name"`
 }
 
 type CreateUserResponse struct {
+	User User `json:"user"`
 }
 
 func GetUser(request GetUserRequest) GetUserResponse {
@@ -50,5 +52,17 @@ func GetUsers(request GetUserRequest) GetUsersResponse {
 }
 
 func CreateUser(request CreateUserRequest) CreateUserResponse {
-	return CreateUserResponse{}
+	repoRequest := repo.CreateUserRequest{
+		Name: request.Name,
+	}
+
+	response := repo.CreateUser(repoRequest)
+
+	return CreateUserResponse{
+		User: User{
+			Id:    response.User.Id,
+			Name:  response.User.Name,
+			Score: response.User.Score,
+		},
+	}
 }

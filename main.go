@@ -13,6 +13,7 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/get_user", handler.GetUser)
+	router.POST("/create_user", handler.CreateUser)
 
 	router.Run()
 }

@@ -19,3 +19,16 @@ func GetUser(c *gin.Context) {
 
 	c.JSON(http.StatusOK, getUserResponse)
 }
+
+func CreateUser(c *gin.Context) {
+	var request service.CreateUserRequest
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	response := service.CreateUser(request)
+
+	c.JSON(http.StatusOK, response)
+}
