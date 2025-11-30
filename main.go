@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/michaeljang94/zikeeper/internal"
+	"github.com/michaeljang94/zikeeper/internal/handler"
 )
 
 func main() {
@@ -12,7 +12,7 @@ func main() {
 
 	router := gin.Default()
 
-	router.GET("/getUser", internal.GetUser)
+	router.GET("/get_user", handler.GetUser)
 
 	router.Run()
 }
