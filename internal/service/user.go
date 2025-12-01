@@ -9,9 +9,11 @@ import (
 )
 
 type User struct {
-	Id    string `json:"id"`
-	Name  string `json:"name"`
-	Score int    `json:"score"`
+	Id       string `json:"id"`
+	Name     string `json:"name"`
+	Score    int    `json:"score"`
+	UserName string `json:"user_name"`
+	Password string `json:"password"`
 }
 
 type GetUserRequest struct {
@@ -54,9 +56,11 @@ func (service *UserService) GetUser(request GetUserRequest) (GetUserResponse, er
 
 	return GetUserResponse{
 		User: User{
-			Id:    response.User.Id,
-			Name:  response.User.Name,
-			Score: response.User.Score,
+			Id:       response.User.Id,
+			Name:     response.User.Name,
+			Score:    response.User.Score,
+			UserName: response.User.UserName,
+			Password: response.User.Password,
 		},
 	}, nil
 }
@@ -69,9 +73,11 @@ func (service *UserService) CreateUser(request CreateUserRequest) (CreateUserRes
 	id := uuid.New()
 
 	repoRequest := repo.CreateUserRequest{
-		Id:    id.String(),
-		Name:  request.Name,
-		Score: 0,
+		Id:       id.String(),
+		Name:     request.Name,
+		Score:    0,
+		UserName: request.Name,
+		Password: "1234",
 	}
 
 	response, err := service.Repo.CreateUser(repoRequest)
@@ -83,9 +89,11 @@ func (service *UserService) CreateUser(request CreateUserRequest) (CreateUserRes
 
 	return CreateUserResponse{
 		User: User{
-			Id:    response.User.Id,
-			Name:  response.User.Name,
-			Score: response.User.Score,
+			Id:       response.User.Id,
+			Name:     response.User.Name,
+			Score:    response.User.Score,
+			UserName: response.User.UserName,
+			Password: response.User.Password,
 		},
 	}, nil
 }
