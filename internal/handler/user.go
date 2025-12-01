@@ -12,11 +12,10 @@ type UserHandler struct {
 }
 
 func (handler *UserHandler) GetUser(c *gin.Context) {
-	var getUserRequest service.GetUserRequest
+	id := c.Param("id")
 
-	if err := c.ShouldBindJSON(&getUserRequest); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	getUserRequest := service.GetUserRequest{
+		Id: id,
 	}
 
 	getUserResponse, err := handler.Service.GetUser(getUserRequest)
