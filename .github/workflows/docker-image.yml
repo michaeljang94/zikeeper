@@ -15,4 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag zikeeper:$(date +%s)
+      # run: docker build . --file Dockerfile --tag zikeeper:$(date +%s)
+      run: docker build . --file Dockerfile --tag  ghcr.io/michaeljang94/zikeeper:latest
+    - name: Push to GHCR
+      run: docker push ghcr.io/michaeljang94/zikeeper:latest
