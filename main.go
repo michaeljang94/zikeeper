@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -64,6 +65,9 @@ func main() {
 	router := gin.New()
 	router.Use(CORSMiddleware())
 
+	router.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+	})
 	router.GET("/get_user/:id", userHandler.GetUser)
 	router.POST("/create_user", userHandler.CreateUser)
 
