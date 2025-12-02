@@ -20,7 +20,7 @@ type AuthenticateUserRequest struct {
 }
 
 type AuthenticateUserResponse struct {
-	Status string
+	Status string `json:"status"`
 }
 
 func (service *AuthService) AuthenticateUser(request AuthenticateUserRequest) (AuthenticateUserResponse, error) {

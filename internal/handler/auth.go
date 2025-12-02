@@ -20,13 +20,14 @@ func (handler *AuthHandler) AuthenticateUser(c *gin.Context) {
 	}
 
 	request := service.AuthenticateUserRequest{
-		User: service.AuthUser{},
+		User: authUser,
 	}
 
 	response, err := handler.Service.AuthenticateUser(request)
 
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, err)
+		c.JSON(http.StatusUnauthorized, response)
+		return
 	}
 
 	c.JSON(http.StatusOK, response)
