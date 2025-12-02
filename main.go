@@ -62,6 +62,13 @@ func main() {
 		Service: &userService,
 	}
 
+	authService := service.AuthService{
+		UserRepo: &userRepo,
+	}
+	authHandler := handler.AuthHandler{
+		Service: &authService,
+	}
+
 	router := gin.New()
 	router.Use(CORSMiddleware())
 
@@ -70,6 +77,8 @@ func main() {
 	})
 	router.GET("/get_user/:id", userHandler.GetUser)
 	router.POST("/create_user", userHandler.CreateUser)
+
+	router.POST("/auth", authHandler.AuthenticateUser)
 
 	router.Run()
 
