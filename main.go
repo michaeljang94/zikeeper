@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/gin-gonic/autotls"
 	"github.com/gin-gonic/gin"
 	"github.com/michaeljang94/zikeeper/internal/handler"
 	"github.com/michaeljang94/zikeeper/internal/repo"
@@ -67,5 +68,5 @@ func main() {
 	router.GET("/get_user/:id", userHandler.GetUser)
 	router.POST("/create_user", userHandler.CreateUser)
 
-	router.Run()
+	autotls.Run(router, "zikeeper.com")
 }

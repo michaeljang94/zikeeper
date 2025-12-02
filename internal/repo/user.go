@@ -17,7 +17,8 @@ type User struct {
 }
 
 type GetUserRequest struct {
-	Id string
+	Id       string
+	UserName string
 }
 
 type GetUserResponse struct {
@@ -41,7 +42,7 @@ type UserRepo struct {
 }
 
 func (repo *UserRepo) CreateUser(request CreateUserRequest) (CreateUserResponse, error) {
-	_, err := repo.Db.Exec("INSERT INTO users (id, name, score, user_name, password) VALUES (?, ?, ?, ?, ?)",
+	_, err := repo.Db.Exec("INSERT INTO users (id, name, score, username, password) VALUES (?, ?, ?, ?, ?)",
 		request.Id, request.Name, request.Score, request.UserName, request.Password)
 
 	if err != nil {
@@ -66,6 +67,21 @@ func (repo *UserRepo) CreateUser(request CreateUserRequest) (CreateUserResponse,
 
 func (repo *UserRepo) GetUser(request GetUserRequest) (GetUserResponse, error) {
 	row := repo.Db.QueryRow("SELECT * FROM users WHERE id = ?", request.Id)
+
+	user := User{}
+	if err := row.Scan(&user.Id, &user.Name, &user.Score, &user.UserName, &user.Password); err != nil {
+		if err == sql.ErrNoRows {
+			return GetUserResponse{}, err
+		}
+	}
+
+	return GetUserResponse{
+		User: user,
+	}, nil
+}
+
+func (repo *UserRepo) GetUserByUserName(request GetUserRequest) (GetUserResponse, error) {
+	row := repo.Db.QueryRow("SELECT * FROM users WHERE username = ?", request.UserName)
 
 	user := User{}
 	if err := row.Scan(&user.Id, &user.Name, &user.Score, &user.UserName, &user.Password); err != nil {

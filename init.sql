@@ -1,3 +1,9 @@
+-- TODO: CHANGE THIS
+-- Create a specific user with grants
+CREATE USER 'root'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+
+
 CREATE DATABASE IF NOT EXISTS zikeeper;
 
 USE zikeeper;
@@ -5,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users(
     id varchar(36) DEFAULT (UUID()), 
     name varchar(255),
     score int,
-    user_name varchar(255),
+    username varchar(255),
     password varchar(255),
     PRIMARY KEY (id),
     CONSTRAINT uc_name UNIQUE (name)

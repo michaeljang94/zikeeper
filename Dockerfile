@@ -1,4 +1,4 @@
-FROM golang:tip-alpine3.22 AS base
+FROM --platform=linux/amd64 golang:tip-alpine3.22 AS build
 
 WORKDIR /app
 
@@ -9,6 +9,12 @@ RUN go mod download
 COPY . .
 
 RUN go build -o zikeeper
+
+FROM --platform=linux/amd64 golang:tip-alpine3.22
+
+COPY --from=build /app/zikeeper /app/zikeeper
+
+WORKDIR /app
 
 EXPOSE 8080
 

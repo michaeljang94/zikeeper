@@ -15,10 +15,10 @@ func (handler *UserHandler) GetUser(c *gin.Context) {
 	id := c.Param("id")
 
 	getUserRequest := service.GetUserRequest{
-		Id: id,
+		UserName: id,
 	}
 
-	getUserResponse, err := handler.Service.GetUser(getUserRequest)
+	getUserResponse, err := handler.Service.GetUserByUserName(getUserRequest)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)

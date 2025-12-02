@@ -12,12 +12,13 @@ type User struct {
 	Id       string `json:"id"`
 	Name     string `json:"name"`
 	Score    int    `json:"score"`
-	UserName string `json:"user_name"`
+	UserName string `json:"username"`
 	Password string `json:"password"`
 }
 
 type GetUserRequest struct {
-	Id string `json:"id" binding:"required"`
+	Id       string `json:"id" binding:"required"`
+	UserName string `json:"username"`
 }
 
 type GetUserResponse struct {
@@ -41,6 +42,28 @@ type CreateUserResponse struct {
 
 type UserService struct {
 	Repo *repo.UserRepo
+}
+
+func (service *UserService) GetUserByUserName(request GetUserRequest) (GetUserResponse, error) {
+	repoRequest := repo.GetUserRequest{
+		UserName: request.UserName,
+	}
+
+	response, err := service.Repo.GetUserByUserName(repoRequest)
+
+	if err != nil {
+		return GetUserResponse{}, err
+	}
+
+	return GetUserResponse{
+		User: User{
+			Id:       response.User.Id,
+			Name:     response.User.Name,
+			Score:    response.User.Score,
+			UserName: response.User.UserName,
+			Password: response.User.Password,
+		},
+	}, nil
 }
 
 func (service *UserService) GetUser(request GetUserRequest) (GetUserResponse, error) {
