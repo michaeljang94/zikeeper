@@ -96,7 +96,7 @@ func (service *UserService) GetUsers(request GetUserRequest) GetUsersResponse {
 
 func generateRandomPass() string {
 	passLength := 5
-	charset := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	charset := "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 	seed := rand.NewSource(time.Now().UnixNano())
 	random := rand.New(seed)
