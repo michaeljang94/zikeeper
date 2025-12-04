@@ -2,6 +2,8 @@ package service
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 
 	"github.com/google/uuid"
 
@@ -92,6 +94,21 @@ func (service *UserService) GetUsers(request GetUserRequest) GetUsersResponse {
 	return GetUsersResponse{}
 }
 
+func generateRandomPass() string {
+	passLength := 5
+	charset := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+	seed := rand.NewSource(time.Now().UnixNano())
+	random := rand.New(seed)
+	result := make([]byte, passLength)
+
+	for i := range result {
+		result[i] = charset[random.Intn(len(charset))]
+	}
+
+	return string(result)
+}
+
 func (service *UserService) CreateUser(request CreateUserRequest) (CreateUserResponse, error) {
 	id := uuid.New()
 
@@ -100,7 +117,7 @@ func (service *UserService) CreateUser(request CreateUserRequest) (CreateUserRes
 		Name:     request.Name,
 		Score:    0,
 		UserName: request.Name,
-		Password: "1234",
+		Password: generateRandomPass(),
 	}
 
 	response, err := service.Repo.CreateUser(repoRequest)
