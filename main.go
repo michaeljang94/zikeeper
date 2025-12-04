@@ -12,6 +12,8 @@ import (
 	"github.com/michaeljang94/zikeeper/internal/repo"
 	"github.com/michaeljang94/zikeeper/internal/service"
 
+	"github.com/joho/godotenv"
+
 	"github.com/go-sql-driver/mysql"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -32,7 +34,24 @@ func CORSMiddleware() gin.HandlerFunc {
 	}
 }
 
+func loadEnvironmentVars() {
+	env := os.Getenv("ZIKEEPER_ENV")
+	if "" == env {
+		env = "development"
+	}
+
+	godotenv.Load(".env." + env + ".local")
+	if "test" != env {
+		godotenv.Load(".env.local")
+	}
+
+	godotenv.Load(".env." + env)
+	godotenv.Load() // The Original .env
+}
+
 func main() {
+	loadEnvironmentVars()
+
 	cfg := mysql.NewConfig()
 	cfg.User = os.Getenv("MYSQL_USER")
 	cfg.Passwd = os.Getenv("MYSQL_PASS")
