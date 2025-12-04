@@ -9,6 +9,8 @@ services:
     environment:
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
+      MYSQL_USER: root
+      MYSQL_PASS: password
     depends_on:
       - mysql
     networks:
