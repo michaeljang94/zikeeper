@@ -40,6 +40,7 @@ services:
     command: --init-file /data/application/init.sql
     volumes:
       - ./init.sql:/data/application/init.sql
+      - ./mysql:/var/lib/mysql
     networks:
       - default
   muzino:
