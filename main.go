@@ -101,5 +101,5 @@ func main() {
 	router.POST("/auth", authHandler.AuthenticateUser)
 
 	// router.Run()
-	log.Fatal(autotls.Run(router, "api.zikeeper.com"))
+	log.Fatal(autotls.Run(router, "api.zikeeper.com", "zikeeper.com"))
 }

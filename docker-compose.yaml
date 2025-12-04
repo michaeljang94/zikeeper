@@ -5,7 +5,8 @@ services:
     build:
       dockerfile: ./Dockerfile
     ports:
-      - 8080:8080
+      - 80:80
+      - 443:443
     environment:
       MYSQL_HOST: mysql
       MYSQL_PORT: 3306
