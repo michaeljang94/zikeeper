@@ -1,6 +1,6 @@
 services:
   zikeeper:
-    image: zikeeper
+    image: ghcr.io/michaeljang94/zikeeper
     restart: always
     build:
       dockerfile: ./Dockerfile
@@ -19,7 +19,6 @@ services:
     image: mysql
     restart: always
     environment:
-      MYSQL_ROOT_USER: ${MYSQL_ROOT_USER}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: zikeeper
     ports:
