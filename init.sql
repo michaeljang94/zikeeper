@@ -1,9 +1,3 @@
--- TODO: CHANGE THIS
--- Create a specific user with grants
-CREATE USER 'root'@'%' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
-
-
 CREATE DATABASE IF NOT EXISTS zikeeper;
 
 USE zikeeper;

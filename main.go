@@ -34,8 +34,8 @@ func CORSMiddleware() gin.HandlerFunc {
 
 func main() {
 	cfg := mysql.NewConfig()
-	cfg.User = "root"
-	cfg.Passwd = "password"
+	cfg.User = os.Getenv("MYSQL_USER")
+	cfg.Passwd = os.Getenv("MYSQL_PASS")
 	cfg.Net = "tcp"
 	cfg.Addr = os.Getenv("MYSQL_HOST") + ":" + os.Getenv("MYSQL_PORT")
 	cfg.DBName = "zikeeper"
