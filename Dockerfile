@@ -16,7 +16,8 @@ COPY --from=build /app/zikeeper /app/zikeeper
 
 WORKDIR /app
 
-EXPOSE 80
-EXPOSE 443
+# EXPOSE 80
+# EXPOSE 443
+EXPOSE 8080
 
 CMD ["/app/zikeeper"]
