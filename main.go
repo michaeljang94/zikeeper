@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/gin-gonic/autotls"
 	"github.com/gin-gonic/gin"
 	"github.com/michaeljang94/zikeeper/internal/handler"
 	"github.com/michaeljang94/zikeeper/internal/repo"
@@ -100,6 +99,6 @@ func main() {
 
 	router.POST("/auth", authHandler.AuthenticateUser)
 
-	// router.Run()
-	autotls.Run(router, "api.zikeeper.com")
+	router.Run()
+	// autotls.Run(router, "api.zikeeper.com")
 }
