@@ -9,15 +9,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Login to GHCR
-      env:
-        GHCR_ACCESS_TOKEN: ${{ secrets.GHCR_ACCESS_TOKEN }}
-      run: docker login ghcr.io -u michaeljang94 -p $GHCR_ACCESS_TOKEN
-    - name: Build the Docker image
-      # run: docker build . --file Dockerfile --tag zikeeper:$(date +%s)
-      run: docker build . --file Dockerfile --tag  ghcr.io/michaeljang94/zikeeper:latest
-    - name: Push to GHCR
-      run: docker push ghcr.io/michaeljang94/zikeeper:latest
+      - uses: actions/checkout@v4
+      - name: Login to GHCR
+        env:
+          GHCR_ACCESS_TOKEN: ${{ secrets.GHCR_ACCESS_TOKEN }}
+        run: docker login ghcr.io -u michaeljang94 -p $GHCR_ACCESS_TOKEN
+      - name: Build the Docker image
+        # run: docker build . --file Dockerfile --tag zikeeper:$(date +%s)
+        run: docker build . --file Dockerfile --tag  ghcr.io/michaeljang94/zikeeper:latest
+      - name: Push to GHCR
+        run: docker push ghcr.io/michaeljang94/zikeeper:latest
