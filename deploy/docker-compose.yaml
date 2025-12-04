@@ -1,0 +1,49 @@
+services:
+  nginx:
+    image: nginx
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - zikeeper
+      - muzino
+    networks:
+      - default
+  zikeeper:
+    image: ghcr.io/michaeljang94/zikeeper
+    restart: always
+    ports:
+      - 8080:80
+      - 8081:443
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    depends_on:
+      - mysql
+    networks:
+      - default
+  mysql:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: zikeeper
+    ports:
+      - 3306:3306
+    command: --init-file /data/application/init.sql
+    volumes:
+      - ./init.sql:/data/application/init.sql
+    networks:
+      - default
+  muzino:
+    image: ghcr.io/michaeljang94/muzino
+    restart: always
+    ports:
+      - 3000:80
+    networks:
+      - default
