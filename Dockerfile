@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 golang:tip-alpine3.22 AS build
+FROM golang:tip-alpine3.22 AS build
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ COPY . .
 
 RUN go build -o zikeeper
 
-FROM --platform=linux/amd64 golang:tip-alpine3.22
+FROM golang:tip-alpine3.22
 
 COPY --from=build /app/zikeeper /app/zikeeper
 
