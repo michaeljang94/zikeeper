@@ -54,7 +54,7 @@ func main() {
 
 	cfg := mysql.NewConfig()
 	cfg.User = os.Getenv("MYSQL_USER")
-	cfg.Passwd = os.Getenv("MYSQL_PASS")
+	cfg.Passwd = os.Getenv("MYSQL_PASSWORD")
 	cfg.Net = "tcp"
 	cfg.Addr = os.Getenv("MYSQL_HOST") + ":" + os.Getenv("MYSQL_PORT")
 	cfg.DBName = "zikeeper"
