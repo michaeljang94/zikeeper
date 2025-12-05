@@ -18,6 +18,10 @@ type Table struct {
 	Players string
 }
 
+type Player struct {
+	Name string
+}
+
 type GetTableByNameRequest struct {
 	TableName string
 }
@@ -40,6 +44,24 @@ type CreateTableRequest struct {
 
 type CreateTableResponse struct {
 	Table Table
+}
+
+type AddPlayerToTableRequest struct {
+	TableName string
+	Player    Player
+}
+
+type AddPlayerToTableResponse struct {
+}
+
+func (repo *TableRepo) AddPlayerToTable(request AddPlayerToTableRequest) (AddPlayerToTableResponse, error) {
+	_, err := repo.Db.Exec("UPDATE tables SET players = CONCAT(players,',',?) WHERE name = ?", request.Player.Name, request.TableName)
+
+	if err != nil {
+		return AddPlayerToTableResponse{}, err
+	}
+
+	return AddPlayerToTableResponse{}, nil
 }
 
 func (repo *TableRepo) CreateTable(request CreateTableRequest) (CreateTableResponse, error) {

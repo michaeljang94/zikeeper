@@ -67,3 +67,24 @@ func (handler *TableHandler) GetTableByName(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
+func (handler *TableHandler) AddPlayerToTable(c *gin.Context) {
+	request := service.AddPlayerToTableRequest{}
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	_, err := handler.Service.AddPlayerToTable(request)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "error",
+			"error":  err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "OK"})
+}

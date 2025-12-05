@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS tables(
 );
 
 INSERT INTO tables
-VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668266", "Table1", "black_jack", "");
+VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668266", "Table1", "black_jack", "muone,guksoo");
 
 INSERT INTO tables
 VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668267", "Table2", "black_jack", "");
