@@ -109,6 +109,7 @@ func main() {
 		ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 	})
 	router.GET("/api/user/:id", userHandler.GetUserByUsername)
+	router.GET("/api/users", userHandler.GetUsers)
 
 	router.POST("/api/auth/login", authHandler.AuthenticateUser)
 	router.POST("/api/auth/signup", authHandler.CreateNewUser)

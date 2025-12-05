@@ -73,6 +73,28 @@ func (service *UserService) GetUser(request GetUserRequest) (GetUserResponse, er
 	}, nil
 }
 
-func (service *UserService) GetUsers(request GetUserRequest) GetUsersResponse {
-	return GetUsersResponse{}
+func (service *UserService) GetUsers(request GetUsersRequest) (GetUsersResponse, error) {
+	repoRequest := repo.GetUsersRequest{}
+
+	repoResponse, err := service.Repo.GetUsers(repoRequest)
+
+	if err != nil {
+		return GetUsersResponse{}, err
+	}
+
+	var users []User
+	for i := range repoResponse.Users {
+		user := User{
+			Id:       repoResponse.Users[i].Id,
+			Name:     repoResponse.Users[i].Name,
+			Score:    repoResponse.Users[i].Score,
+			UserName: repoResponse.Users[i].UserName,
+		}
+
+		users = append(users, user)
+	}
+
+	return GetUsersResponse{
+		Users: users,
+	}, nil
 }

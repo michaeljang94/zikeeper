@@ -4,6 +4,10 @@ import (
 	"database/sql"
 )
 
+type UserRepo struct {
+	Db *sql.DB
+}
+
 type User struct {
 	Id       string
 	Name     string
@@ -21,8 +25,39 @@ type GetUserResponse struct {
 	User User
 }
 
-type UserRepo struct {
-	Db *sql.DB
+type GetUsersRequest struct {
+}
+
+type GetUsersResponse struct {
+	Users []User
+}
+
+func (repo *UserRepo) GetUsers(request GetUsersRequest) (GetUsersResponse, error) {
+	rows, err := repo.Db.Query("SELECT id, name, score, username FROM users")
+
+	if err != nil {
+		return GetUsersResponse{}, err
+	}
+
+	defer rows.Close()
+
+	var users []User
+
+	for rows.Next() {
+		var user User
+		if err := rows.Scan(&user.Id, &user.Name, &user.Score, &user.UserName); err != nil {
+			return GetUsersResponse{}, err
+		}
+		users = append(users, user)
+	}
+
+	if err = rows.Err(); err != nil {
+		return GetUsersResponse{}, err
+	}
+
+	return GetUsersResponse{
+		Users: users,
+	}, nil
 }
 
 func (repo *UserRepo) GetUser(request GetUserRequest) (GetUserResponse, error) {
