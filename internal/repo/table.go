@@ -12,8 +12,10 @@ type TableRepo struct {
 }
 
 type Table struct {
-	Id   string
-	Name string
+	Id      string
+	Name    string
+	Game    string
+	Players string
 }
 
 type GetTableByNameRequest struct {
@@ -21,7 +23,7 @@ type GetTableByNameRequest struct {
 }
 
 type GetTableByNameResponse struct {
-	TableName string
+	Table Table
 }
 
 type GetTablesRequest struct {
@@ -53,8 +55,8 @@ func (repo *TableRepo) CreateTable(request CreateTableRequest) (CreateTableRespo
 
 	return CreateTableResponse{
 		Table: Table{
-			request.Id,
-			request.TableName,
+			Id:   request.Id,
+			Name: request.TableName,
 		},
 	}, nil
 }
@@ -88,16 +90,16 @@ func (repo *TableRepo) GetTables(request GetTablesRequest) (GetTablesResponse, e
 }
 
 func (repo *TableRepo) GetTableByName(request GetTableByNameRequest) (GetTableByNameResponse, error) {
-	row := repo.Db.QueryRow("SELECT id, name FROM tables WHERE name = ?", request.TableName)
+	row := repo.Db.QueryRow("SELECT id, name, game, players FROM tables WHERE name = ?", request.TableName)
 
 	table := Table{}
-	if err := row.Scan(&table.Id, &table.Name); err != nil {
+	if err := row.Scan(&table.Id, &table.Name, &table.Game, &table.Players); err != nil {
 		if err == sql.ErrNoRows {
 			return GetTableByNameResponse{}, err
 		}
 	}
 
 	return GetTableByNameResponse{
-		TableName: table.Name,
+		Table: table,
 	}, nil
 }
