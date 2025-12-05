@@ -19,7 +19,7 @@ func (handler *AuthHandler) CreateNewUser(c *gin.Context) {
 		return
 	}
 
-	response, err := handler.Service.CreateNewUser(request)
+	_, err := handler.Service.CreateNewUser(request)
 
 	if err != nil {
 		if err.Error() == "duplicate entry" {
@@ -29,7 +29,7 @@ func (handler *AuthHandler) CreateNewUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusOK, gin.H{"status": "OK"})
 }
 
 func (handler *AuthHandler) AuthenticateUser(c *gin.Context) {
