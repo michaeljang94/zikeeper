@@ -27,6 +27,12 @@ CREATE TABLE IF NOT EXISTS game_sessions(
     username varchar(255)
 );
 
+CREATE TABLE IF NOT EXISTS table_sessions(
+    table_name varchar(255),
+    session_id varchar(36) DEFAULT (UUID()),
+);
+
+
 INSERT INTO tables
 VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668266", "Table1", "black_jack");
 
