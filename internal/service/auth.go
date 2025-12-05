@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/michaeljang94/zikeeper/internal/repo"
@@ -53,7 +52,6 @@ func (service *AuthService) CreateNewUser(request CreateAuthUserRequest) (Create
 	response, err := service.AuthRepo.CreateNewUser(repoRequest)
 
 	if err != nil {
-		fmt.Println(err)
 		return CreateAuthUserResponse{}, err
 	}
 

@@ -77,20 +77,29 @@ func main() {
 	authRepo := repo.AuthRepo{
 		Db: db,
 	}
+	tableRepo := repo.TableRepo{
+		Db: db,
+	}
 
 	userService := service.UserService{
 		Repo: &userRepo,
 	}
-	userHandler := handler.UserHandler{
-		Service: &userService,
-	}
-
 	authService := service.AuthService{
 		UserRepo: &userRepo,
 		AuthRepo: &authRepo,
 	}
+	tableService := service.TableService{
+		TableRepo: &tableRepo,
+	}
+
+	userHandler := handler.UserHandler{
+		Service: &userService,
+	}
 	authHandler := handler.AuthHandler{
 		Service: &authService,
+	}
+	tableHandler := handler.TableHandler{
+		Service: &tableService,
 	}
 
 	router := gin.New()
@@ -103,6 +112,8 @@ func main() {
 
 	router.POST("/api/auth/login", authHandler.AuthenticateUser)
 	router.POST("/api/auth/signup", authHandler.CreateNewUser)
+
+	router.GET("/api/table/:id", tableHandler.GetTableByName)
 
 	router.Run()
 	// log.Fatal(autotls.Run(router, "api.zikeeper.com", "zikeeper.com"))

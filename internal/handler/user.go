@@ -21,7 +21,9 @@ func (handler *UserHandler) GetUserByUsername(c *gin.Context) {
 	getUserResponse, err := handler.Service.GetUserByUserName(getUserRequest)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "error",
+		})
 		return
 	}
 

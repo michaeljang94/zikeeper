@@ -47,7 +47,9 @@ func (handler *AuthHandler) AuthenticateUser(c *gin.Context) {
 	response, err := handler.Service.AuthenticateUser(request)
 
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, response)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "error",
+		})
 		return
 	}
 
