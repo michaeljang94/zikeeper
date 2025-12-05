@@ -44,35 +44,6 @@ type CreateTableResponse struct {
 	Table Table `json:"table"`
 }
 
-type AddPlayerToTableRequest struct {
-	TableName string `json:"table_name"`
-	Player    Player `json:"player"`
-}
-
-type AddPlayerToTableResponse struct {
-}
-
-func (service *TableService) AddPlayerToTable(request AddPlayerToTableRequest) (AddPlayerToTableResponse, error) {
-	// TODO: Check to ensure user is not already in the table
-
-	// TODO: Check user exists
-
-	req := repo.AddPlayerToTableRequest{
-		TableName: request.TableName,
-		Player: repo.Player{
-			Name: request.Player.Name,
-		},
-	}
-
-	_, err := service.TableRepo.AddPlayerToTable(req)
-
-	if err != nil {
-		return AddPlayerToTableResponse{}, err
-	}
-
-	return AddPlayerToTableResponse{}, nil
-}
-
 func (service *TableService) CreateTable(request CreateTableRequest) (CreateTableResponse, error) {
 	serviceRequest := repo.CreateTableRequest{
 		Id:        request.Id,
