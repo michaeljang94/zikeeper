@@ -81,10 +81,10 @@ func (repo *UserRepo) GetUser(request GetUserRequest) (GetUserResponse, error) {
 }
 
 func (repo *UserRepo) GetUserByUserName(request GetUserRequest) (GetUserResponse, error) {
-	row := repo.Db.QueryRow("SELECT * FROM users WHERE username = ?", request.UserName)
+	row := repo.Db.QueryRow("SELECT id, name, score, username FROM users WHERE username = ?", request.UserName)
 
 	user := User{}
-	if err := row.Scan(&user.Id, &user.Name, &user.Score, &user.UserName, &user.Password); err != nil {
+	if err := row.Scan(&user.Id, &user.Name, &user.Score, &user.UserName); err != nil {
 		if err == sql.ErrNoRows {
 			return GetUserResponse{}, err
 		}
