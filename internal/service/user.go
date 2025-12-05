@@ -1,10 +1,6 @@
 package service
 
 import (
-	"fmt"
-
-	"github.com/google/uuid"
-
 	"github.com/michaeljang94/zikeeper/internal/repo"
 )
 
@@ -29,17 +25,6 @@ type GetUsersRequest struct {
 
 type GetUsersResponse struct {
 	Users []User `json:"users"`
-}
-
-type CreateUserRequest struct {
-	Name     string `json:"name"`
-	Username string `json:"username"`
-	Pincode  string `json:"pincode"`
-	Password string `json:"password"`
-}
-
-type CreateUserResponse struct {
-	User User `json:"user"`
 }
 
 type UserService struct {
@@ -90,32 +75,4 @@ func (service *UserService) GetUser(request GetUserRequest) (GetUserResponse, er
 
 func (service *UserService) GetUsers(request GetUserRequest) GetUsersResponse {
 	return GetUsersResponse{}
-}
-
-func (service *UserService) CreateUser(request CreateUserRequest) (CreateUserResponse, error) {
-	id := uuid.New()
-
-	repoRequest := repo.CreateUserRequest{
-		Id:       id.String(),
-		Name:     request.Name,
-		Score:    0,
-		UserName: request.Username,
-		Password: request.Password,
-		Pincode:  request.Pincode,
-	}
-
-	response, err := service.Repo.CreateUser(repoRequest)
-
-	if err != nil {
-		fmt.Println(err)
-		return CreateUserResponse{}, err
-	}
-
-	return CreateUserResponse{
-		User: User{
-			Id:    response.User.Id,
-			Name:  response.User.Name,
-			Score: response.User.Score,
-		},
-	}, nil
 }

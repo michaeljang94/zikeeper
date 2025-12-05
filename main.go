@@ -99,10 +99,10 @@ func main() {
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 	})
-	router.GET("/api/get_user/:id", userHandler.GetUser)
-	router.POST("/api/create_user", userHandler.CreateUser)
+	router.GET("/api/user/:id", userHandler.GetUserByUsername)
 
 	router.POST("/api/auth/login", authHandler.AuthenticateUser)
+	router.POST("/api/auth/signup", authHandler.CreateNewUser)
 
 	router.Run()
 	// log.Fatal(autotls.Run(router, "api.zikeeper.com", "zikeeper.com"))

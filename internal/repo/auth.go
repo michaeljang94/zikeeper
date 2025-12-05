@@ -1,6 +1,12 @@
 package repo
 
-import "database/sql"
+import (
+	"database/sql"
+	"errors"
+	"fmt"
+
+	"github.com/go-sql-driver/mysql"
+)
 
 type AuthRepo struct {
 	Db *sql.DB
@@ -20,6 +26,19 @@ type AuthUser struct {
 	Pincode  string
 }
 
+type CreateUserRequest struct {
+	Id       string
+	Name     string
+	Score    int
+	UserName string
+	Password string
+	Pincode  string
+}
+
+type CreateUserResponse struct {
+	User User
+}
+
 func (repo *AuthRepo) GetUserByUsername(request GetAuthUserbyUsernameRequest) (GetAuthUserbyUsernameResponse, error) {
 	row := repo.Db.QueryRow("SELECT username, pincode FROM users WHERE username = ?", request.Username)
 
@@ -32,5 +51,28 @@ func (repo *AuthRepo) GetUserByUsername(request GetAuthUserbyUsernameRequest) (G
 
 	return GetAuthUserbyUsernameResponse{
 		AuthUser: user,
+	}, nil
+}
+
+func (repo *AuthRepo) CreateNewUser(request CreateUserRequest) (CreateUserResponse, error) {
+	_, err := repo.Db.Exec("INSERT INTO users (id, name, score, username, password, pincode) VALUES (?, ?, ?, ?, ?, ?)",
+		request.Id, request.Name, request.Score, request.UserName, request.Password, request.Pincode)
+
+	if err != nil {
+		if mysqlErr, ok := err.(*mysql.MySQLError); ok && mysqlErr.Number == 1062 {
+			return CreateUserResponse{}, errors.New("duplicate entry")
+		}
+
+		fmt.Println(err)
+		return CreateUserResponse{}, err
+	}
+
+	return CreateUserResponse{
+		User: User{
+			Id:       request.Id,
+			Name:     request.Name,
+			Score:    request.Score,
+			UserName: request.UserName,
+		},
 	}, nil
 }

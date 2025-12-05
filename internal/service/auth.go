@@ -2,7 +2,9 @@ package service
 
 import (
 	"errors"
+	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/michaeljang94/zikeeper/internal/repo"
 )
 
@@ -23,6 +25,43 @@ type AuthenticateUserRequest struct {
 
 type AuthenticateUserResponse struct {
 	Status string `json:"status"`
+}
+
+type CreateAuthUserRequest struct {
+	Name     string `json:"name"`
+	Username string `json:"username"`
+	Pincode  string `json:"pincode"`
+	Password string `json:"password"`
+}
+
+type CreateAuthUserResponse struct {
+	AuthUser AuthUser `json:"user"`
+}
+
+func (service *AuthService) CreateNewUser(request CreateAuthUserRequest) (CreateAuthUserResponse, error) {
+	id := uuid.New()
+
+	repoRequest := repo.CreateUserRequest{
+		Id:       id.String(),
+		Name:     request.Name,
+		Score:    0,
+		UserName: request.Username,
+		Password: request.Password,
+		Pincode:  request.Pincode,
+	}
+
+	response, err := service.AuthRepo.CreateNewUser(repoRequest)
+
+	if err != nil {
+		fmt.Println(err)
+		return CreateAuthUserResponse{}, err
+	}
+
+	return CreateAuthUserResponse{
+		AuthUser: AuthUser{
+			Username: response.User.UserName,
+		},
+	}, nil
 }
 
 func (service *AuthService) AuthenticateUser(request AuthenticateUserRequest) (AuthenticateUserResponse, error) {
