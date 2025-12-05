@@ -31,6 +31,7 @@ type CreateUserRequest struct {
 	Score    int
 	UserName string
 	Password string
+	Pincode  string
 }
 
 type CreateUserResponse struct {
@@ -42,8 +43,8 @@ type UserRepo struct {
 }
 
 func (repo *UserRepo) CreateUser(request CreateUserRequest) (CreateUserResponse, error) {
-	_, err := repo.Db.Exec("INSERT INTO users (id, name, score, username, password) VALUES (?, ?, ?, ?, ?)",
-		request.Id, request.Name, request.Score, request.UserName, request.Password)
+	_, err := repo.Db.Exec("INSERT INTO users (id, name, score, username, password, pincode) VALUES (?, ?, ?, ?, ?, ?)",
+		request.Id, request.Name, request.Score, request.UserName, request.Password, request.Pincode)
 
 	if err != nil {
 		if mysqlErr, ok := err.(*mysql.MySQLError); ok && mysqlErr.Number == 1062 {
@@ -60,7 +61,6 @@ func (repo *UserRepo) CreateUser(request CreateUserRequest) (CreateUserResponse,
 			Name:     request.Name,
 			Score:    request.Score,
 			UserName: request.UserName,
-			Password: request.Password,
 		},
 	}, nil
 }
@@ -69,7 +69,7 @@ func (repo *UserRepo) GetUser(request GetUserRequest) (GetUserResponse, error) {
 	row := repo.Db.QueryRow("SELECT * FROM users WHERE id = ?", request.Id)
 
 	user := User{}
-	if err := row.Scan(&user.Id, &user.Name, &user.Score, &user.UserName, &user.Password); err != nil {
+	if err := row.Scan(&user.Id, &user.Name, &user.Score, &user.UserName); err != nil {
 		if err == sql.ErrNoRows {
 			return GetUserResponse{}, err
 		}

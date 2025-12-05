@@ -2,8 +2,6 @@ package service
 
 import (
 	"fmt"
-	"math/rand"
-	"time"
 
 	"github.com/google/uuid"
 
@@ -15,7 +13,6 @@ type User struct {
 	Name     string `json:"name"`
 	Score    int    `json:"score"`
 	UserName string `json:"username"`
-	Password string `json:"password"`
 }
 
 type GetUserRequest struct {
@@ -35,7 +32,10 @@ type GetUsersResponse struct {
 }
 
 type CreateUserRequest struct {
-	Name string `json:"name"`
+	Name     string `json:"name"`
+	Username string `json:"username"`
+	Pincode  string `json:"pincode"`
+	Password string `json:"password"`
 }
 
 type CreateUserResponse struct {
@@ -63,7 +63,6 @@ func (service *UserService) GetUserByUserName(request GetUserRequest) (GetUserRe
 			Name:     response.User.Name,
 			Score:    response.User.Score,
 			UserName: response.User.UserName,
-			Password: response.User.Password,
 		},
 	}, nil
 }
@@ -85,28 +84,12 @@ func (service *UserService) GetUser(request GetUserRequest) (GetUserResponse, er
 			Name:     response.User.Name,
 			Score:    response.User.Score,
 			UserName: response.User.UserName,
-			Password: response.User.Password,
 		},
 	}, nil
 }
 
 func (service *UserService) GetUsers(request GetUserRequest) GetUsersResponse {
 	return GetUsersResponse{}
-}
-
-func generateRandomPass() string {
-	passLength := 5
-	charset := "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
-	seed := rand.NewSource(time.Now().UnixNano())
-	random := rand.New(seed)
-	result := make([]byte, passLength)
-
-	for i := range result {
-		result[i] = charset[random.Intn(len(charset))]
-	}
-
-	return string(result)
 }
 
 func (service *UserService) CreateUser(request CreateUserRequest) (CreateUserResponse, error) {
@@ -116,8 +99,9 @@ func (service *UserService) CreateUser(request CreateUserRequest) (CreateUserRes
 		Id:       id.String(),
 		Name:     request.Name,
 		Score:    0,
-		UserName: request.Name,
-		Password: generateRandomPass(),
+		UserName: request.Username,
+		Password: request.Password,
+		Pincode:  request.Pincode,
 	}
 
 	response, err := service.Repo.CreateUser(repoRequest)
@@ -129,11 +113,9 @@ func (service *UserService) CreateUser(request CreateUserRequest) (CreateUserRes
 
 	return CreateUserResponse{
 		User: User{
-			Id:       response.User.Id,
-			Name:     response.User.Name,
-			Score:    response.User.Score,
-			UserName: response.User.UserName,
-			Password: response.User.Password,
+			Id:    response.User.Id,
+			Name:  response.User.Name,
+			Score: response.User.Score,
 		},
 	}, nil
 }
