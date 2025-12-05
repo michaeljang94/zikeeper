@@ -20,7 +20,7 @@ func (handler *AuthHandler) AuthenticateUser(c *gin.Context) {
 	}
 
 	request := service.AuthenticateUserRequest{
-		User: authUser,
+		AuthUser: authUser,
 	}
 
 	response, err := handler.Service.AuthenticateUser(request)

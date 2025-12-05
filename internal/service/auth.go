@@ -8,15 +8,17 @@ import (
 
 type AuthService struct {
 	UserRepo *repo.UserRepo
+	AuthRepo *repo.AuthRepo
 }
 
 type AuthUser struct {
-	UserName string `json:"username"`
+	Username string `json:"username"`
 	Password string `json:"password"`
+	Pincode  string `json:"pincode"`
 }
 
 type AuthenticateUserRequest struct {
-	User AuthUser
+	AuthUser AuthUser
 }
 
 type AuthenticateUserResponse struct {
@@ -24,21 +26,21 @@ type AuthenticateUserResponse struct {
 }
 
 func (service *AuthService) AuthenticateUser(request AuthenticateUserRequest) (AuthenticateUserResponse, error) {
-	authUser := request.User
+	authUser := request.AuthUser
 
 	// Get user
-	getUserRequest := repo.GetUserRequest{
-		UserName: authUser.UserName,
+	getAuthUserRequest := repo.GetAuthUserbyUsernameRequest{
+		Username: authUser.Username,
 	}
 
-	user, err := service.UserRepo.GetUserByUserName(getUserRequest)
+	user, err := service.AuthRepo.GetUserByUsername(getAuthUserRequest)
 	if err != nil {
 		return AuthenticateUserResponse{
 			Status: "FAILED",
 		}, err
 	}
 
-	if user.User.Password != authUser.Password {
+	if user.AuthUser.Pincode != authUser.Pincode {
 		return AuthenticateUserResponse{
 			Status: "FAILED",
 		}, errors.New("FAILED")
