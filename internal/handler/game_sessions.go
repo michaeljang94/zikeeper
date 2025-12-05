@@ -23,7 +23,7 @@ func (handler *GameSessionsHandler) AddPlayerToGameSession(c *gin.Context) {
 		return
 	}
 
-	_, err := handler.Service.AddPlayerToTable(request)
+	_, err := handler.Service.AddPlayerToGameSession(request)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

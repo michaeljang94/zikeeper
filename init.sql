@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS tables(
 CREATE TABLE IF NOT EXISTS game_sessions(
     session_id varchar(36) DEFAULT (UUID()),
     table_name varchar(255),
-    username varchar(255)
+    username varchar(255),
+    CONSTRAINT uc_username UNIQUE (username)
 );
 
 CREATE TABLE IF NOT EXISTS table_sessions(

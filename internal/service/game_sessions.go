@@ -15,10 +15,12 @@ type AddPlayerToGameSessionRequest struct {
 type AddPlayerToGameSessionResponse struct {
 }
 
-func (service *GameSessionsService) AddPlayerToTable(request AddPlayerToGameSessionRequest) (AddPlayerToGameSessionResponse, error) {
-	// TODO: Check to ensure user is not already in the table
+func (service *GameSessionsService) AddPlayerToGameSession(request AddPlayerToGameSessionRequest) (AddPlayerToGameSessionResponse, error) {
+	// Check that the session exists...
 
 	// TODO: Check user exists
+
+	// TODO: Check to ensure user is not already in the table
 
 	req := repo.AddPlayerToGameSessionRequest{
 		SessionId: request.SessionId,
