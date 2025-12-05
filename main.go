@@ -74,6 +74,10 @@ func main() {
 	userRepo := repo.UserRepo{
 		Db: db,
 	}
+	authRepo := repo.AuthRepo{
+		Db: db,
+	}
+
 	userService := service.UserService{
 		Repo: &userRepo,
 	}
@@ -83,6 +87,7 @@ func main() {
 
 	authService := service.AuthService{
 		UserRepo: &userRepo,
+		AuthRepo: &authRepo,
 	}
 	authHandler := handler.AuthHandler{
 		Service: &authService,
