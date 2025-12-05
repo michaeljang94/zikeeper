@@ -55,6 +55,8 @@ type AddPlayerToTableResponse struct {
 func (service *TableService) AddPlayerToTable(request AddPlayerToTableRequest) (AddPlayerToTableResponse, error) {
 	// TODO: Check to ensure user is not already in the table
 
+	// TODO: Check user exists
+
 	req := repo.AddPlayerToTableRequest{
 		TableName: request.TableName,
 		Player: repo.Player{
