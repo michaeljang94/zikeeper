@@ -9,22 +9,22 @@ type TableService struct {
 }
 
 type Table struct {
-	Name string
+	Name string `json:"name"`
 }
 
 type GetTableByNameRequest struct {
-	TableName string
+	TableName string `json:"name"`
 }
 
 type GetTableByNameResponse struct {
-	Table Table
+	Table Table `json:"table"`
 }
 
 type GetTablesRequest struct {
 }
 
 type GetTablesResponse struct {
-	Tables []Table
+	Tables []Table `json:"tables"`
 }
 
 type CreateTableRequest struct {
@@ -33,7 +33,7 @@ type CreateTableRequest struct {
 }
 
 type CreateTableResponse struct {
-	Table Table
+	Table Table `json:"table"`
 }
 
 func (service *TableService) CreateTable(request CreateTableRequest) (CreateTableResponse, error) {
