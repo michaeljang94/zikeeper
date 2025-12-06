@@ -15,6 +15,44 @@ type AddPlayerToGameSessionRequest struct {
 type AddPlayerToGameSessionResponse struct {
 }
 
+type GetPlayersForSessionIdRequest struct {
+	SessionId string
+}
+
+type GetPlayersForSessionIdResponse struct {
+	Players []Player
+}
+
+type Player struct {
+	Name string `json:"name"`
+}
+
+func (service *GameSessionsService) GetPlayersForSessionId(request GetPlayersForSessionIdRequest) (GetPlayersForSessionIdResponse, error) {
+	req := repo.GetPlayersForSessionIdRequest{
+		SessionId: request.SessionId,
+	}
+
+	res, err := service.Repo.GetPlayersForSessionId(req)
+
+	if err != nil {
+		return GetPlayersForSessionIdResponse{}, err
+	}
+
+	var players []Player
+
+	for i := range res.Players {
+		player := Player{
+			Name: res.Players[i].Name,
+		}
+
+		players = append(players, player)
+	}
+
+	return GetPlayersForSessionIdResponse{
+		Players: players,
+	}, nil
+}
+
 func (service *GameSessionsService) AddPlayerToGameSession(request AddPlayerToGameSessionRequest) (AddPlayerToGameSessionResponse, error) {
 	// Check that the session exists...
 

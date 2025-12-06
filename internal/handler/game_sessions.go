@@ -11,6 +11,26 @@ type GameSessionsHandler struct {
 	Service *service.GameSessionsService
 }
 
+func (handler *GameSessionsHandler) GetPlayersForSessionId(c *gin.Context) {
+	id := c.Param("id")
+
+	request := service.GetPlayersForSessionIdRequest{
+		SessionId: id,
+	}
+
+	response, err := handler.Service.GetPlayersForSessionId(request)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "error",
+			"error":  err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+
 func (handler *GameSessionsHandler) AddPlayerToGameSession(c *gin.Context) {
 	id := c.Param("id")
 

@@ -127,6 +127,7 @@ func main() {
 	router.GET("/api/tables", tableHandler.GetTables)
 	router.POST("/api/create_table", tableHandler.CreateTable)
 	router.POST("/api/game_session/:id/add_player", gameSessionsHandler.AddPlayerToGameSession)
+	router.GET("/api/game_session/:id/get_players", gameSessionsHandler.GetPlayersForSessionId)
 
 	router.Run()
 	// log.Fatal(autotls.Run(router, "api.zikeeper.com", "zikeeper.com"))

@@ -1,8 +1,6 @@
 package service
 
 import (
-	"strings"
-
 	"github.com/michaeljang94/zikeeper/internal/repo"
 )
 
@@ -10,14 +8,9 @@ type TableService struct {
 	TableRepo *repo.TableRepo
 }
 
-type Player struct {
-	Name string `json:"name"`
-}
-
 type Table struct {
-	Name    string   `json:"name"`
-	Game    string   `json:"game"`
-	Players []string `json:"players"`
+	Name string `json:"name"`
+	Game string `json:"game"`
 }
 
 type GetTableByNameRequest struct {
@@ -97,13 +90,10 @@ func (service *TableService) GetTableByName(request GetTableByNameRequest) (GetT
 		return GetTableByNameResponse{}, err
 	}
 
-	players := strings.Split(response.Table.Players, ",")
-
 	return GetTableByNameResponse{
 		Table: Table{
-			Name:    response.Table.Name,
-			Game:    response.Table.Game,
-			Players: players,
+			Name: response.Table.Name,
+			Game: response.Table.Game,
 		},
 	}, nil
 }
