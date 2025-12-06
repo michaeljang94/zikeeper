@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS game_sessions(
 
 CREATE TABLE IF NOT EXISTS table_sessions(
     table_name varchar(255),
-    session_id varchar(36) DEFAULT (UUID()),
+    session_id varchar(36) DEFAULT (UUID())
 );
 
 
