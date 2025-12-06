@@ -80,7 +80,10 @@ func main() {
 	tableRepo := repo.TableRepo{
 		Db: db,
 	}
-	gameSessionsRepo := repo.GameSessionsRepo{
+	playerSessionsRepo := repo.PlayerSessionsRepo{
+		Db: db,
+	}
+	tableSessionsRepo := repo.TableSessionsRepo{
 		Db: db,
 	}
 
@@ -94,8 +97,11 @@ func main() {
 	tableService := service.TableService{
 		TableRepo: &tableRepo,
 	}
-	gameSessionsService := service.GameSessionsService{
-		Repo: &gameSessionsRepo,
+	playerSessionsService := service.PlayerSessionsService{
+		Repo: &playerSessionsRepo,
+	}
+	tableSessionsService := service.TableSessionsService{
+		Repo: &tableSessionsRepo,
 	}
 
 	userHandler := handler.UserHandler{
@@ -107,8 +113,11 @@ func main() {
 	tableHandler := handler.TableHandler{
 		Service: &tableService,
 	}
-	gameSessionsHandler := handler.GameSessionsHandler{
-		Service: &gameSessionsService,
+	playerSessionsHandler := handler.PlayerSessionsHandler{
+		Service: &playerSessionsService,
+	}
+	tableSessionsHandler := handler.TableSessionsHandler{
+		Service: &tableSessionsService,
 	}
 
 	router := gin.New()
@@ -125,9 +134,11 @@ func main() {
 
 	router.GET("/api/table/:id", tableHandler.GetTableByName)
 	router.GET("/api/tables", tableHandler.GetTables)
+	router.POST("/api/table/:id/session/create", tableSessionsHandler.CreateTableSession)
+	router.GET("/api/table/:id/sessions", tableSessionsHandler.GetTableSessions)
 	router.POST("/api/create_table", tableHandler.CreateTable)
-	router.POST("/api/game_session/:id/add_player", gameSessionsHandler.AddPlayerToGameSession)
-	router.GET("/api/game_session/:id/get_players", gameSessionsHandler.GetPlayersForSessionId)
+	router.POST("/api/game_session/:id/add_player", playerSessionsHandler.AddPlayerToPlayerSession)
+	router.GET("/api/game_session/:id/get_players", playerSessionsHandler.GetPlayersForSessionId)
 
 	router.Run()
 	// log.Fatal(autotls.Run(router, "api.zikeeper.com", "zikeeper.com"))

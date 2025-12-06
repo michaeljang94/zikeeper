@@ -7,11 +7,11 @@ import (
 	"github.com/michaeljang94/zikeeper/internal/service"
 )
 
-type GameSessionsHandler struct {
-	Service *service.GameSessionsService
+type PlayerSessionsHandler struct {
+	Service *service.PlayerSessionsService
 }
 
-func (handler *GameSessionsHandler) GetPlayersForSessionId(c *gin.Context) {
+func (handler *PlayerSessionsHandler) GetPlayersForSessionId(c *gin.Context) {
 	id := c.Param("id")
 
 	request := service.GetPlayersForSessionIdRequest{
@@ -31,10 +31,10 @@ func (handler *GameSessionsHandler) GetPlayersForSessionId(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (handler *GameSessionsHandler) AddPlayerToGameSession(c *gin.Context) {
+func (handler *PlayerSessionsHandler) AddPlayerToPlayerSession(c *gin.Context) {
 	id := c.Param("id")
 
-	request := service.AddPlayerToGameSessionRequest{
+	request := service.AddPlayerToPlayerSessionRequest{
 		SessionId: id,
 	}
 
@@ -43,7 +43,7 @@ func (handler *GameSessionsHandler) AddPlayerToGameSession(c *gin.Context) {
 		return
 	}
 
-	_, err := handler.Service.AddPlayerToGameSession(request)
+	_, err := handler.Service.AddPlayerToPlayerSession(request)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

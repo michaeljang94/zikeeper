@@ -1,0 +1,64 @@
+package repo
+
+import (
+	"database/sql"
+)
+
+type TableSessionsRepo struct {
+	Db *sql.DB
+}
+
+type TableSession struct {
+	SessionId string
+}
+
+type CreateTableSessionRequest struct {
+	SessionId string
+	TableName string
+}
+
+type CreateTableSessionResponse struct {
+}
+
+type GetTableSessionsRequest struct {
+	TableName string
+}
+
+type GetTableSessionsResponse struct {
+	TableSessions []TableSession
+}
+
+func (repo *TableSessionsRepo) GetTableSessions(request GetTableSessionsRequest) (GetTableSessionsResponse, error) {
+	rows, err := repo.Db.Query("SELECT session_id FROM table_sessions WHERE table_name = ?", request.TableName)
+
+	if err != nil {
+		return GetTableSessionsResponse{}, err
+	}
+
+	defer rows.Close()
+
+	var tableSessions []TableSession
+	for rows.Next() {
+		var tableSession TableSession
+
+		if err := rows.Scan(&tableSession.SessionId); err != nil {
+			return GetTableSessionsResponse{}, err
+		}
+
+		tableSessions = append(tableSessions, tableSession)
+	}
+
+	return GetTableSessionsResponse{
+		TableSessions: tableSessions,
+	}, nil
+}
+
+func (repo *TableSessionsRepo) CreateTableSession(request CreateTableSessionRequest) (CreateTableResponse, error) {
+	_, err := repo.Db.Exec("INSERT INTO table_sessions (session_id, table_name) VALUES (?, ?)", request.SessionId, request.TableName)
+
+	if err != nil {
+		return CreateTableResponse{}, err
+	}
+
+	return CreateTableResponse{}, nil
+}

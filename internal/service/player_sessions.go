@@ -2,32 +2,32 @@ package service
 
 import "github.com/michaeljang94/zikeeper/internal/repo"
 
-type GameSessionsService struct {
-	Repo *repo.GameSessionsRepo
+type PlayerSessionsService struct {
+	Repo *repo.PlayerSessionsRepo
 }
 
-type AddPlayerToGameSessionRequest struct {
-	SessionId string
+type AddPlayerToPlayerSessionRequest struct {
+	SessionId string `json:"session_id"`
 	TableName string `json:"table_name"`
 	Player    Player `json:"player"`
 }
 
-type AddPlayerToGameSessionResponse struct {
+type AddPlayerToPlayerSessionResponse struct {
 }
 
 type GetPlayersForSessionIdRequest struct {
-	SessionId string
+	SessionId string `json:"session_id"`
 }
 
 type GetPlayersForSessionIdResponse struct {
-	Players []Player
+	Players []Player `json:"players"`
 }
 
 type Player struct {
 	Name string `json:"name"`
 }
 
-func (service *GameSessionsService) GetPlayersForSessionId(request GetPlayersForSessionIdRequest) (GetPlayersForSessionIdResponse, error) {
+func (service *PlayerSessionsService) GetPlayersForSessionId(request GetPlayersForSessionIdRequest) (GetPlayersForSessionIdResponse, error) {
 	req := repo.GetPlayersForSessionIdRequest{
 		SessionId: request.SessionId,
 	}
@@ -53,14 +53,14 @@ func (service *GameSessionsService) GetPlayersForSessionId(request GetPlayersFor
 	}, nil
 }
 
-func (service *GameSessionsService) AddPlayerToGameSession(request AddPlayerToGameSessionRequest) (AddPlayerToGameSessionResponse, error) {
+func (service *PlayerSessionsService) AddPlayerToPlayerSession(request AddPlayerToPlayerSessionRequest) (AddPlayerToPlayerSessionResponse, error) {
 	// Check that the session exists...
 
 	// TODO: Check user exists
 
 	// TODO: Check to ensure user is not already in the table
 
-	req := repo.AddPlayerToGameSessionRequest{
+	req := repo.AddPlayerToPlayerSessionRequest{
 		SessionId: request.SessionId,
 		TableName: request.TableName,
 		Player: repo.Player{
@@ -68,11 +68,11 @@ func (service *GameSessionsService) AddPlayerToGameSession(request AddPlayerToGa
 		},
 	}
 
-	_, err := service.Repo.AddPlayerToGameSession(req)
+	_, err := service.Repo.AddPlayerToPlayerSession(req)
 
 	if err != nil {
-		return AddPlayerToGameSessionResponse{}, err
+		return AddPlayerToPlayerSessionResponse{}, err
 	}
 
-	return AddPlayerToGameSessionResponse{}, nil
+	return AddPlayerToPlayerSessionResponse{}, nil
 }
