@@ -132,13 +132,14 @@ func main() {
 	router.POST("/api/auth/login", authHandler.AuthenticateUser)
 	router.POST("/api/auth/signup", authHandler.CreateNewUser)
 
-	router.GET("/api/table/:id", tableHandler.GetTableByName)
+	router.GET("/api/table/:table_name", tableHandler.GetTableByName)
 	router.GET("/api/tables", tableHandler.GetTables)
-	router.POST("/api/table/:id/session/create", tableSessionsHandler.CreateTableSession)
-	router.GET("/api/table/:id/sessions", tableSessionsHandler.GetTableSessions)
-	router.POST("/api/create_table", tableHandler.CreateTable)
-	router.POST("/api/game_session/:id/add_player", playerSessionsHandler.AddPlayerToPlayerSession)
-	router.GET("/api/game_session/:id/get_players", playerSessionsHandler.GetPlayersForSessionId)
+	router.GET("/api/table/:table_name/sessions", tableSessionsHandler.GetTableSessions)
+	router.GET("/api/table/:table_name/session/:session_id/players", playerSessionsHandler.GetPlayersForSessionId)
+
+	router.POST("/api/table/create", tableHandler.CreateTable)
+	router.POST("/api/table/:table_name/session/create", tableSessionsHandler.CreateTableSession)
+	router.POST("/api/table/:table_name/session/:session_id/player/add", playerSessionsHandler.AddPlayerToPlayerSession)
 
 	router.Run()
 	// log.Fatal(autotls.Run(router, "api.zikeeper.com", "zikeeper.com"))

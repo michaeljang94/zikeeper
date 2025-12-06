@@ -7,8 +7,8 @@ type PlayerSessionsService struct {
 }
 
 type AddPlayerToPlayerSessionRequest struct {
-	SessionId string `json:"session_id"`
-	TableName string `json:"table_name"`
+	SessionId string
+	TableName string
 	Player    Player `json:"player"`
 }
 

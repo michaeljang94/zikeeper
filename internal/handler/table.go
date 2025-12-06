@@ -49,10 +49,10 @@ func (handler *TableHandler) GetTables(c *gin.Context) {
 }
 
 func (handler *TableHandler) GetTableByName(c *gin.Context) {
-	id := c.Param("id")
+	tableName := c.Param("table_name")
 
 	request := service.GetTableByNameRequest{
-		TableName: id,
+		TableName: tableName,
 	}
 
 	response, err := handler.Service.GetTableByName(request)

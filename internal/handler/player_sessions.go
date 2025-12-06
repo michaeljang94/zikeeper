@@ -12,10 +12,10 @@ type PlayerSessionsHandler struct {
 }
 
 func (handler *PlayerSessionsHandler) GetPlayersForSessionId(c *gin.Context) {
-	id := c.Param("id")
+	sessionId := c.Param("session_id")
 
 	request := service.GetPlayersForSessionIdRequest{
-		SessionId: id,
+		SessionId: sessionId,
 	}
 
 	response, err := handler.Service.GetPlayersForSessionId(request)
@@ -32,10 +32,12 @@ func (handler *PlayerSessionsHandler) GetPlayersForSessionId(c *gin.Context) {
 }
 
 func (handler *PlayerSessionsHandler) AddPlayerToPlayerSession(c *gin.Context) {
-	id := c.Param("id")
+	sessionId := c.Param("session_id")
+	tableName := c.Param("table_name")
 
 	request := service.AddPlayerToPlayerSessionRequest{
-		SessionId: id,
+		SessionId: sessionId,
+		TableName: tableName,
 	}
 
 	if err := c.ShouldBindJSON(&request); err != nil {

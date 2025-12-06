@@ -12,7 +12,7 @@ type TableSessionsHandler struct {
 }
 
 func (handler *TableSessionsHandler) GetTableSessions(c *gin.Context) {
-	tableName := c.Param("id")
+	tableName := c.Param("table_name")
 
 	request := service.GetTableSessionsRequest{
 		TableName: tableName,
@@ -32,7 +32,7 @@ func (handler *TableSessionsHandler) GetTableSessions(c *gin.Context) {
 }
 
 func (handler *TableSessionsHandler) CreateTableSession(c *gin.Context) {
-	tableName := c.Param("id")
+	tableName := c.Param("table_name")
 
 	request := service.CreateTableSessionRequest{
 		TableName: tableName,
