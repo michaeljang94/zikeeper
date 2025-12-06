@@ -32,6 +32,7 @@ type GetTablesResponse struct {
 	Tables []Table
 }
 
+// TODO auto generate a random ID instead of taking it in
 type CreateTableRequest struct {
 	Id        string
 	TableName string
