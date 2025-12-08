@@ -27,6 +27,7 @@ type AuthenticateUserRequest struct {
 
 type AuthenticateUserResponse struct {
 	Status string `json:"status"`
+	Token  string `json:"token"`
 }
 
 type CreateAuthUserRequest struct {
@@ -110,5 +111,6 @@ func (service *AuthService) AuthenticateUser(request AuthenticateUserRequest) (A
 
 	return AuthenticateUserResponse{
 		Status: "OK",
+		Token:  tokenString,
 	}, nil
 }
