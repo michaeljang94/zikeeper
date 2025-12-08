@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -47,6 +48,7 @@ func (handler *AuthHandler) AuthenticateUser(c *gin.Context) {
 	response, err := handler.Service.AuthenticateUser(request)
 
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status": "error",
 		})

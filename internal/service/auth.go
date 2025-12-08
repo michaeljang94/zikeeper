@@ -76,12 +76,14 @@ func (service *AuthService) AuthenticateUser(request AuthenticateUserRequest) (A
 
 	user, err := service.AuthRepo.GetUserByUsername(getAuthUserRequest)
 	if err != nil {
+		fmt.Println("Failed fetching user from db")
 		return AuthenticateUserResponse{
 			Status: "FAILED",
 		}, err
 	}
 
 	if user.AuthUser.Pincode != authUser.Pincode {
+		fmt.Println("Wrong passcode")
 		return AuthenticateUserResponse{
 			Status: "FAILED",
 		}, errors.New("FAILED")
@@ -90,8 +92,8 @@ func (service *AuthService) AuthenticateUser(request AuthenticateUserRequest) (A
 	iat := time.Now().UTC()
 	exp := iat.Add(time.Hour)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"iat":      iat.Unix(),
-		"exp":      exp.Unix(),
+		"iat":      iat.UnixMilli(),
+		"exp":      exp.UnixMilli(),
 		"username": user.AuthUser.Username,
 		"role":     user.AuthUser.Role,
 	})
@@ -101,7 +103,7 @@ func (service *AuthService) AuthenticateUser(request AuthenticateUserRequest) (A
 	tokenString, err := token.SignedString([]byte(key))
 
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Failed generating token")
 		return AuthenticateUserResponse{
 			Status: "FAILED",
 		}, err
