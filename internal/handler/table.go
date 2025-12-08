@@ -11,6 +11,24 @@ type TableHandler struct {
 	Service *service.TableService
 }
 
+func (handler *TableHandler) DeleteTable(c *gin.Context) {
+	var request service.DeleteTableRequest
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	_, err := handler.Service.DeleteTable(request)
+
+	if err != nil {
+		c.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": "Delete table failed"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "OK"})
+}
+
 func (handler *TableHandler) CreateTable(c *gin.Context) {
 	var request service.CreateTableRequest
 

@@ -37,6 +37,27 @@ type CreateTableResponse struct {
 	Table Table `json:"table"`
 }
 
+type DeleteTableRequest struct {
+	TableName string `json:"name"`
+}
+
+type DeleteTableResponse struct {
+}
+
+func (service *TableService) DeleteTable(request DeleteTableRequest) (DeleteTableResponse, error) {
+	req := repo.DeleteTableRequest{
+		TableName: request.TableName,
+	}
+
+	_, err := service.TableRepo.DeleteTable(req)
+
+	if err != nil {
+		return DeleteTableResponse{}, err
+	}
+
+	return DeleteTableResponse{}, nil
+}
+
 func (service *TableService) CreateTable(request CreateTableRequest) (CreateTableResponse, error) {
 	id := uuid.New()
 

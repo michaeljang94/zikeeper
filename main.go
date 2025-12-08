@@ -144,6 +144,7 @@ func main() {
 	roleProtected.GET("/api/table/:table_name/session/:session_id/players", playerSessionsHandler.GetPlayersForSessionId)
 
 	roleProtected.POST("/api/table/create", tableHandler.CreateTable)
+	roleProtected.POST("api/table/delete", tableHandler.DeleteTable)
 	roleProtected.POST("/api/table/:table_name/session/create", tableSessionsHandler.CreateTableSession)
 	roleProtected.POST("/api/table/:table_name/session/:session_id/player/add", playerSessionsHandler.AddPlayerToPlayerSession)
 

@@ -30,6 +30,13 @@ type Player struct {
 	Name string `json:"name"`
 }
 
+type DeletePlayerSessionsByTableNameRequest struct {
+	TableName string
+}
+
+type DeletePlayerSessionsByTableNameResponse struct {
+}
+
 func (repo *PlayerSessionsRepo) GetPlayersForSessionId(request GetPlayersForSessionIdRequest) (GetPlayersForSessionIdResponse, error) {
 	rows, err := repo.Db.Query("SELECT username FROM player_sessions WHERE session_id = ?", request.SessionId)
 
@@ -65,4 +72,15 @@ func (repo *PlayerSessionsRepo) AddPlayerToPlayerSession(request AddPlayerToPlay
 	}
 
 	return AddPlayerToPlayerSessionResponse{}, nil
+}
+
+func (repo *PlayerSessionsRepo) DeletePlayerSessionsByTableName(request DeletePlayerSessionsByTableNameRequest) (DeletePlayerSessionsByTableNameResponse, error) {
+	_, err := repo.Db.Exec("DELETE FROM player_sessions WHERE table_name = ?", request.TableName)
+
+	if err != nil {
+		fmt.Println(err)
+		return DeletePlayerSessionsByTableNameResponse{}, err
+	}
+
+	return DeletePlayerSessionsByTableNameResponse{}, nil
 }

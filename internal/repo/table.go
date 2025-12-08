@@ -42,6 +42,23 @@ type CreateTableResponse struct {
 	Table Table
 }
 
+type DeleteTableRequest struct {
+	TableName string
+}
+
+type DeleteTableResponse struct {
+}
+
+func (repo *TableRepo) DeleteTable(request DeleteTableRequest) (DeleteTableResponse, error) {
+	_, err := repo.Db.Exec("DELETE FROM tables WHERE name = ?", request.TableName)
+
+	if err != nil {
+		return DeleteTableResponse{}, err
+	}
+
+	return DeleteTableResponse{}, nil
+}
+
 func (repo *TableRepo) CreateTable(request CreateTableRequest) (CreateTableResponse, error) {
 	_, err := repo.Db.Exec("INSERT INTO tables (id, name) VALUES (?, ?)", request.Id, request.TableName)
 
