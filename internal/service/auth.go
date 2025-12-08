@@ -2,7 +2,10 @@ package service
 
 import (
 	"errors"
+	"fmt"
+	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/michaeljang94/zikeeper/internal/repo"
 )
@@ -82,6 +85,28 @@ func (service *AuthService) AuthenticateUser(request AuthenticateUserRequest) (A
 			Status: "FAILED",
 		}, errors.New("FAILED")
 	}
+
+	iat := time.Now().UTC()
+	exp := iat.Add(time.Hour)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"iat":      iat.Unix(),
+		"exp":      exp.Unix(),
+		"username": user.AuthUser.Username,
+		"role":     user.AuthUser.Role,
+	})
+
+	// TODO change this
+	key := "SUPERSECRETKEY"
+	tokenString, err := token.SignedString([]byte(key))
+
+	if err != nil {
+		fmt.Println(err)
+		return AuthenticateUserResponse{
+			Status: "FAILED",
+		}, err
+	}
+
+	fmt.Println(tokenString)
 
 	return AuthenticateUserResponse{
 		Status: "OK",
