@@ -130,17 +130,22 @@ func main() {
 	router.POST("/api/auth/login", authHandler.AuthenticateUser)
 	router.POST("/api/auth/signup", authHandler.CreateNewUser)
 
-	router.GET("/api/user/:id", userHandler.GetUserByUsername)
-	router.GET("/api/users", userHandler.GetUsers)
+	protected := router.Group("/", handler.AuthMiddleware())
+	roleProtected := router.Group("/", handler.AuthMiddlewareWithRole("admin"))
 
-	router.GET("/api/table/:table_name", tableHandler.GetTableByName)
-	router.GET("/api/tables", tableHandler.GetTables)
-	router.GET("/api/table/:table_name/sessions", tableSessionsHandler.GetTableSessions)
-	router.GET("/api/table/:table_name/session/:session_id/players", playerSessionsHandler.GetPlayersForSessionId)
+	// Users
+	protected.GET("/api/user/:id", userHandler.GetUserByUsername)
+	roleProtected.GET("/api/users", userHandler.GetUsers)
 
-	router.POST("/api/table/create", tableHandler.CreateTable)
-	router.POST("/api/table/:table_name/session/create", tableSessionsHandler.CreateTableSession)
-	router.POST("/api/table/:table_name/session/:session_id/player/add", playerSessionsHandler.AddPlayerToPlayerSession)
+	// Tables
+	roleProtected.GET("/api/table/:table_name", tableHandler.GetTableByName)
+	roleProtected.GET("/api/tables", tableHandler.GetTables)
+	roleProtected.GET("/api/table/:table_name/sessions", tableSessionsHandler.GetTableSessions)
+	roleProtected.GET("/api/table/:table_name/session/:session_id/players", playerSessionsHandler.GetPlayersForSessionId)
+
+	roleProtected.POST("/api/table/create", tableHandler.CreateTable)
+	roleProtected.POST("/api/table/:table_name/session/create", tableSessionsHandler.CreateTableSession)
+	roleProtected.POST("/api/table/:table_name/session/:session_id/player/add", playerSessionsHandler.AddPlayerToPlayerSession)
 
 	router.Run()
 	// log.Fatal(autotls.Run(router, "api.zikeeper.com", "zikeeper.com"))
