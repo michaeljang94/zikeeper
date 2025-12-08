@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/google/uuid"
 	"github.com/michaeljang94/zikeeper/internal/repo"
 )
 
@@ -29,7 +30,6 @@ type GetTablesResponse struct {
 }
 
 type CreateTableRequest struct {
-	Id        string `json:"id"`
 	TableName string `json:"name"`
 }
 
@@ -38,15 +38,17 @@ type CreateTableResponse struct {
 }
 
 func (service *TableService) CreateTable(request CreateTableRequest) (CreateTableResponse, error) {
-	serviceRequest := repo.CreateTableRequest{
-		Id:        request.Id,
+	id := uuid.New()
+
+	repoRequest := repo.CreateTableRequest{
+		Id:        id.String(),
 		TableName: request.TableName,
 	}
 
-	response, err := service.TableRepo.CreateTable(serviceRequest)
+	response, err := service.TableRepo.CreateTable(repoRequest)
 
 	if err != nil {
-		return CreateTableResponse{}, nil
+		return CreateTableResponse{}, err
 	}
 
 	return CreateTableResponse{
