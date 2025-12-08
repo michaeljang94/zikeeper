@@ -131,7 +131,7 @@ func main() {
 	router.POST("/api/auth/signup", authHandler.CreateNewUser)
 
 	protected := router.Group("/", handler.AuthMiddleware())
-	roleProtected := router.Group("/", handler.AuthMiddlewareWithRole("admin"))
+	roleProtected := router.Group("/", handler.AuthMiddlewareWithRoles([]string{"admin"}))
 
 	// Users
 	protected.GET("/api/user/:id", userHandler.GetUserByUsername)

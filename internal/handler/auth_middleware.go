@@ -2,19 +2,21 @@ package handler
 
 import (
 	"net/http"
+	"slices"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtKey = []byte("SUPERSECRETKEY")
+var jwtKey = []byte("a-string-secret-at-least-256-bits-long")
 
 func AuthMiddleware() gin.HandlerFunc {
-	return AuthMiddlewareWithRole("user")
+	defaultRoles := []string{"user", "admin"}
+	return AuthMiddlewareWithRoles(defaultRoles)
 }
 
-func AuthMiddlewareWithRole(role string) gin.HandlerFunc {
+func AuthMiddlewareWithRoles(roles []string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
@@ -33,7 +35,7 @@ func AuthMiddlewareWithRole(role string) gin.HandlerFunc {
 			c.Set("username", claims["username"])
 			c.Set("role", claims["role"])
 
-			if claims["role"] != role {
+			if !slices.Contains(roles, claims["role"].(string)) {
 				c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 				c.Abort()
 			}
