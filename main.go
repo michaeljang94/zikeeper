@@ -126,11 +126,12 @@ func main() {
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 	})
-	router.GET("/api/user/:id", userHandler.GetUserByUsername)
-	router.GET("/api/users", userHandler.GetUsers)
 
 	router.POST("/api/auth/login", authHandler.AuthenticateUser)
 	router.POST("/api/auth/signup", authHandler.CreateNewUser)
+
+	router.GET("/api/user/:id", userHandler.GetUserByUsername)
+	router.GET("/api/users", userHandler.GetUsers)
 
 	router.GET("/api/table/:table_name", tableHandler.GetTableByName)
 	router.GET("/api/tables", tableHandler.GetTables)
