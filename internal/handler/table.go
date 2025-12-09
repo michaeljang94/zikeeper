@@ -22,7 +22,7 @@ func (handler *TableHandler) DeleteTable(c *gin.Context) {
 	_, err := handler.Service.DeleteTable(request)
 
 	if err != nil {
-		c.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": "Delete table failed"})
+		c.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": "Delete table failed", "reason": err.Error()})
 		return
 	}
 

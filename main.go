@@ -141,11 +141,13 @@ func main() {
 	roleProtected.GET("/api/table/:table_name", tableHandler.GetTableByName)
 	roleProtected.GET("/api/tables", tableHandler.GetTables)
 	roleProtected.GET("/api/table/:table_name/sessions", tableSessionsHandler.GetTableSessions)
+	roleProtected.POST("/api/table/:table_name/sessions/delete", tableSessionsHandler.DeleteTableSessionsByTableName)
 	roleProtected.GET("/api/table/:table_name/session/:session_id/players", playerSessionsHandler.GetPlayersForSessionId)
 
 	roleProtected.POST("/api/table/create", tableHandler.CreateTable)
-	roleProtected.POST("api/table/delete", tableHandler.DeleteTable)
+	roleProtected.POST("/api/table/delete", tableHandler.DeleteTable)
 	roleProtected.POST("/api/table/:table_name/session/create", tableSessionsHandler.CreateTableSession)
+	roleProtected.POST("/api/table/:table_name/session/delete", tableSessionsHandler.DeleteTableSessionBySessionId)
 	roleProtected.POST("/api/table/:table_name/session/:session_id/player/add", playerSessionsHandler.AddPlayerToPlayerSession)
 
 	router.Run()

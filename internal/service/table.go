@@ -1,6 +1,9 @@
 package service
 
 import (
+	"database/sql"
+	"errors"
+
 	"github.com/google/uuid"
 	"github.com/michaeljang94/zikeeper/internal/repo"
 )
@@ -45,11 +48,27 @@ type DeleteTableResponse struct {
 }
 
 func (service *TableService) DeleteTable(request DeleteTableRequest) (DeleteTableResponse, error) {
+	tableSessionService := TableSessionsService{
+		Repo: &repo.TableSessionsRepo{
+			Db: service.TableRepo.Db,
+		},
+	}
+
+	deleteSessionsRequest := DeleteTableSessionsByTableNameRequest{
+		TableName: request.TableName,
+	}
+
+	_, err := tableSessionService.DeleteTableSessionsByTableName(deleteSessionsRequest)
+
+	if err != nil {
+		return DeleteTableResponse{}, err
+	}
+
 	req := repo.DeleteTableRequest{
 		TableName: request.TableName,
 	}
 
-	_, err := service.TableRepo.DeleteTable(req)
+	_, err = service.TableRepo.DeleteTable(req)
 
 	if err != nil {
 		return DeleteTableResponse{}, err
@@ -110,6 +129,10 @@ func (service *TableService) GetTableByName(request GetTableByNameRequest) (GetT
 	response, err := service.TableRepo.GetTableByName(getTableRepoRequest)
 
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return GetTableByNameResponse{}, errors.New("Table does not exist")
+		}
+
 		return GetTableByNameResponse{}, err
 	}
 

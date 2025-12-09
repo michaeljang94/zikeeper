@@ -35,6 +35,13 @@ type DeleteTableSessionsByTableNameRequest struct {
 type DeleteTableSessionsByTableNameResponse struct {
 }
 
+type DeleteTableSessionBySessionIdRequest struct {
+	SessionId string
+}
+
+type DeleteTableSessionBySessionIdResponse struct {
+}
+
 func (repo *TableSessionsRepo) GetTableSessions(request GetTableSessionsRequest) (GetTableSessionsResponse, error) {
 	rows, err := repo.Db.Query("SELECT session_id FROM table_sessions WHERE table_name = ?", request.TableName)
 
@@ -78,4 +85,14 @@ func (repo *TableSessionsRepo) DeleteTableSessionsByTableName(request DeleteTabl
 	}
 
 	return DeleteTableSessionsByTableNameResponse{}, nil
+}
+
+func (repo *TableSessionsRepo) DeleteTableSessionBySessionId(request DeleteTableSessionBySessionIdRequest) (DeleteTableSessionBySessionIdResponse, error) {
+	_, err := repo.Db.Exec("DELETE FROM table_sessions WHERE session_id = ?", request.SessionId)
+
+	if err != nil {
+		return DeleteTableSessionBySessionIdResponse{}, err
+	}
+
+	return DeleteTableSessionBySessionIdResponse{}, nil
 }
