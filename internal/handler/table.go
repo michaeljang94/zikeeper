@@ -42,6 +42,8 @@ func (handler *TableHandler) CreateTable(c *gin.Context) {
 	if err != nil {
 		if err.Error() == "table already exists" {
 			c.JSON(http.StatusConflict, "table already exists")
+		} else {
+			c.JSON(http.StatusBadRequest, err.Error())
 		}
 
 		return

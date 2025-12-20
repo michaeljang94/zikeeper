@@ -84,7 +84,7 @@ func (service *TableService) CreateTable(request CreateTableRequest) (CreateTabl
 	repoRequest := repo.CreateTableRequest{
 		Id:        id.String(),
 		TableName: request.TableName,
-		Game:      request.TableName,
+		Game:      request.Game,
 	}
 
 	response, err := service.TableRepo.CreateTable(repoRequest)
@@ -96,6 +96,7 @@ func (service *TableService) CreateTable(request CreateTableRequest) (CreateTabl
 	return CreateTableResponse{
 		Table: Table{
 			Name: response.Table.Name,
+			Game: response.Table.Game,
 		},
 	}, nil
 }

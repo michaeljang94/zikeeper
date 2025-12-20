@@ -75,6 +75,7 @@ func (repo *TableRepo) CreateTable(request CreateTableRequest) (CreateTableRespo
 		Table: Table{
 			Id:   request.Id,
 			Name: request.TableName,
+			Game: request.Game,
 		},
 	}, nil
 }
