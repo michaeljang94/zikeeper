@@ -104,9 +104,9 @@ func (service *UserService) GetUsers(request GetUsersRequest) (GetUsersResponse,
 }
 
 type ScoreboardUser struct {
-	Username string
-	Score    int
-	Rank     int
+	Username string `json:"username"`
+	Score    int    `json:"score"`
+	Rank     int    `json:"rank"`
 }
 
 type GetUsersScoreboardRequest struct {
