@@ -100,7 +100,7 @@ func (repo *UserRepo) GetUserByUserName(request GetUserRequest) (GetUserResponse
 }
 
 func (repo *UserRepo) GetUsersScoreboard(request GetUsersScoreboardRequest) (GetUsersScoreboardResponse, error) {
-	rows, err := repo.Db.Query("SELECT username, score, DENSE_RANK() OVER (ORDER BY score DESC) AS 'rank' FROM users LIMIT ?", request.Limit)
+	rows, err := repo.Db.Query("SELECT username, score, DENSE_RANK() OVER (ORDER BY score DESC) AS 'rank' FROM users WHERE role = 'user' LIMIT ?", request.Limit)
 
 	if err != nil {
 		return GetUsersScoreboardResponse{}, err
