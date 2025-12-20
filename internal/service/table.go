@@ -34,6 +34,7 @@ type GetTablesResponse struct {
 
 type CreateTableRequest struct {
 	TableName string `json:"name"`
+	Game      string `json:"game"`
 }
 
 type CreateTableResponse struct {
@@ -83,6 +84,7 @@ func (service *TableService) CreateTable(request CreateTableRequest) (CreateTabl
 	repoRequest := repo.CreateTableRequest{
 		Id:        id.String(),
 		TableName: request.TableName,
+		Game:      request.TableName,
 	}
 
 	response, err := service.TableRepo.CreateTable(repoRequest)

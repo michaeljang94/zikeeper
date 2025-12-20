@@ -36,6 +36,7 @@ type GetTablesResponse struct {
 type CreateTableRequest struct {
 	Id        string
 	TableName string
+	Game      string
 }
 
 type CreateTableResponse struct {
@@ -60,7 +61,7 @@ func (repo *TableRepo) DeleteTable(request DeleteTableRequest) (DeleteTableRespo
 }
 
 func (repo *TableRepo) CreateTable(request CreateTableRequest) (CreateTableResponse, error) {
-	_, err := repo.Db.Exec("INSERT INTO tables (id, name) VALUES (?, ?)", request.Id, request.TableName)
+	_, err := repo.Db.Exec("INSERT INTO tables (id, name, game) VALUES (?, ?, ?)", request.Id, request.TableName, request.Game)
 
 	if err != nil {
 		if mysqlErr, ok := err.(*mysql.MySQLError); ok && mysqlErr.Number == 1062 {
