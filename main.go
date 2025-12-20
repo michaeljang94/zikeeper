@@ -136,6 +136,7 @@ func main() {
 	// Users
 	protected.GET("/api/user/:id", userHandler.GetUserByUsername)
 	roleProtected.GET("/api/users", userHandler.GetUsers)
+	roleProtected.GET("/api/users/scoreboard", userHandler.GetUsersScoreboard)
 
 	// Tables
 	roleProtected.GET("/api/table/:table_name", tableHandler.GetTableByName)

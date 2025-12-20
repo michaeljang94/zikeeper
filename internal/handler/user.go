@@ -38,10 +38,29 @@ func (handler *UserHandler) GetUserByUsername(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"status": "error",
+			"status":  "error",
+			"message": err.Error(),
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, getUserResponse)
+}
+
+func (handler *UserHandler) GetUsersScoreboard(c *gin.Context) {
+	req := service.GetUsersScoreboardRequest{
+		Limit: 10,
+	}
+
+	res, err := handler.Service.GetUsersScoreboard(req)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, res)
 }

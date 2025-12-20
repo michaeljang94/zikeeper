@@ -14,6 +14,7 @@ type User struct {
 	Score    int
 	UserName string
 	Password string
+	Rank     int
 }
 
 type GetUserRequest struct {
@@ -29,6 +30,14 @@ type GetUsersRequest struct {
 }
 
 type GetUsersResponse struct {
+	Users []User
+}
+
+type GetUsersScoreboardRequest struct {
+	Limit int
+}
+
+type GetUsersScoreboardResponse struct {
 	Users []User
 }
 
@@ -87,5 +96,33 @@ func (repo *UserRepo) GetUserByUserName(request GetUserRequest) (GetUserResponse
 
 	return GetUserResponse{
 		User: user,
+	}, nil
+}
+
+func (repo *UserRepo) GetUsersScoreboard(request GetUsersScoreboardRequest) (GetUsersScoreboardResponse, error) {
+	rows, err := repo.Db.Query("SELECT username, score, DENSE_RANK() OVER (ORDER BY score DESC) AS 'rank' FROM users LIMIT ?", request.Limit)
+
+	if err != nil {
+		return GetUsersScoreboardResponse{}, err
+	}
+
+	defer rows.Close()
+
+	var users []User
+
+	for rows.Next() {
+		var user User
+		if err := rows.Scan(&user.UserName, &user.Score, &user.Rank); err != nil {
+			return GetUsersScoreboardResponse{}, err
+		}
+		users = append(users, user)
+	}
+
+	if err = rows.Err(); err != nil {
+		return GetUsersScoreboardResponse{}, err
+	}
+
+	return GetUsersScoreboardResponse{
+		Users: users,
 	}, nil
 }

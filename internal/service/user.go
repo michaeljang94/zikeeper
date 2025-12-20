@@ -9,6 +9,7 @@ type User struct {
 	Name     string `json:"name"`
 	Score    int    `json:"score"`
 	UserName string `json:"username"`
+	Rank     int    `json:"rank"`
 }
 
 type GetUserRequest struct {
@@ -95,6 +96,41 @@ func (service *UserService) GetUsers(request GetUsersRequest) (GetUsersResponse,
 	}
 
 	return GetUsersResponse{
+		Users: users,
+	}, nil
+}
+
+type GetUsersScoreboardRequest struct {
+	Limit int
+}
+
+type GetUsersScoreboardResponse struct {
+	Users []User
+}
+
+func (service *UserService) GetUsersScoreboard(request GetUsersScoreboardRequest) (GetUsersScoreboardResponse, error) {
+	req := repo.GetUsersScoreboardRequest{
+		Limit: request.Limit,
+	}
+
+	res, err := service.Repo.GetUsersScoreboard(req)
+
+	if err != nil {
+		return GetUsersScoreboardResponse{}, err
+	}
+
+	var users []User
+	for i := range res.Users {
+		user := User{
+			UserName: res.Users[i].UserName,
+			Score:    res.Users[i].Score,
+			Rank:     res.Users[i].Rank,
+		}
+
+		users = append(users, user)
+	}
+
+	return GetUsersScoreboardResponse{
 		Users: users,
 	}, nil
 }
