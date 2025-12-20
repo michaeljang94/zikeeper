@@ -126,3 +126,21 @@ func (repo *UserRepo) GetUsersScoreboard(request GetUsersScoreboardRequest) (Get
 		Users: users,
 	}, nil
 }
+
+type UpdateUserByUsernameRequest struct {
+	Username string
+	Score    int
+}
+
+type UpdateUserByUsernameResponse struct {
+}
+
+func (repo *UserRepo) UpdateUserByUsername(request UpdateUserByUsernameRequest) (UpdateUserByUsernameResponse, error) {
+	_, err := repo.Db.Exec("UPDATE users SET score = ? WHERE username = ?", request.Score, request.Username)
+
+	if err != nil {
+		return UpdateUserByUsernameResponse{}, err
+	}
+
+	return UpdateUserByUsernameResponse{}, nil
+}

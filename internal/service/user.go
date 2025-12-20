@@ -134,3 +134,26 @@ func (service *UserService) GetUsersScoreboard(request GetUsersScoreboardRequest
 		Users: users,
 	}, nil
 }
+
+type UpdateUserByUsernameRequest struct {
+	Username string
+	Score    int `json:"score"`
+}
+
+type UpdateUserByUsernameResponse struct {
+}
+
+func (service *UserService) UpdateUserByUsername(request UpdateUserByUsernameRequest) (UpdateUserByUsernameResponse, error) {
+	req := repo.UpdateUserByUsernameRequest{
+		Username: request.Username,
+		Score:    request.Score,
+	}
+
+	_, err := service.Repo.UpdateUserByUsername(req)
+
+	if err != nil {
+		return UpdateUserByUsernameResponse{}, err
+	}
+
+	return UpdateUserByUsernameResponse{}, nil
+}

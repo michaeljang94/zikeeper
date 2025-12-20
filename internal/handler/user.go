@@ -64,3 +64,28 @@ func (handler *UserHandler) GetUsersScoreboard(c *gin.Context) {
 
 	c.JSON(http.StatusOK, res)
 }
+
+func (handler *UserHandler) UpdateUserByUsername(c *gin.Context) {
+	id := c.Param("id")
+
+	req := service.UpdateUserByUsernameRequest{
+		Username: id,
+	}
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	res, err := handler.Service.UpdateUserByUsername(req)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, res)
+}
