@@ -14,7 +14,7 @@ type User struct {
 	Score    int
 	UserName string
 	Password string
-	Rank     int
+	Role     string
 }
 
 type GetUserRequest struct {
@@ -33,16 +33,22 @@ type GetUsersResponse struct {
 	Users []User
 }
 
+type ScoreboardUser struct {
+	Username string
+	Score    int
+	Rank     int
+}
+
 type GetUsersScoreboardRequest struct {
 	Limit int
 }
 
 type GetUsersScoreboardResponse struct {
-	Users []User
+	Users []ScoreboardUser
 }
 
 func (repo *UserRepo) GetUsers(request GetUsersRequest) (GetUsersResponse, error) {
-	rows, err := repo.Db.Query("SELECT id, name, score, username FROM users")
+	rows, err := repo.Db.Query("SELECT id, name, score, username, role FROM users")
 
 	if err != nil {
 		return GetUsersResponse{}, err
@@ -54,7 +60,7 @@ func (repo *UserRepo) GetUsers(request GetUsersRequest) (GetUsersResponse, error
 
 	for rows.Next() {
 		var user User
-		if err := rows.Scan(&user.Id, &user.Name, &user.Score, &user.UserName); err != nil {
+		if err := rows.Scan(&user.Id, &user.Name, &user.Score, &user.UserName, &user.Role); err != nil {
 			return GetUsersResponse{}, err
 		}
 		users = append(users, user)
@@ -85,10 +91,10 @@ func (repo *UserRepo) GetUser(request GetUserRequest) (GetUserResponse, error) {
 }
 
 func (repo *UserRepo) GetUserByUserName(request GetUserRequest) (GetUserResponse, error) {
-	row := repo.Db.QueryRow("SELECT id, name, score, username FROM users WHERE username = ?", request.UserName)
+	row := repo.Db.QueryRow("SELECT id, name, score, username, role FROM users WHERE username = ?", request.UserName)
 
 	user := User{}
-	if err := row.Scan(&user.Id, &user.Name, &user.Score, &user.UserName); err != nil {
+	if err := row.Scan(&user.Id, &user.Name, &user.Score, &user.UserName, &user.Role); err != nil {
 		if err == sql.ErrNoRows {
 			return GetUserResponse{}, err
 		}
@@ -108,11 +114,11 @@ func (repo *UserRepo) GetUsersScoreboard(request GetUsersScoreboardRequest) (Get
 
 	defer rows.Close()
 
-	var users []User
+	var users []ScoreboardUser
 
 	for rows.Next() {
-		var user User
-		if err := rows.Scan(&user.UserName, &user.Score, &user.Rank); err != nil {
+		var user ScoreboardUser
+		if err := rows.Scan(&user.Username, &user.Score, &user.Rank); err != nil {
 			return GetUsersScoreboardResponse{}, err
 		}
 		users = append(users, user)
@@ -130,13 +136,14 @@ func (repo *UserRepo) GetUsersScoreboard(request GetUsersScoreboardRequest) (Get
 type UpdateUserByUsernameRequest struct {
 	Username string
 	Score    int
+	Role     string
 }
 
 type UpdateUserByUsernameResponse struct {
 }
 
 func (repo *UserRepo) UpdateUserByUsername(request UpdateUserByUsernameRequest) (UpdateUserByUsernameResponse, error) {
-	_, err := repo.Db.Exec("UPDATE users SET score = ? WHERE username = ?", request.Score, request.Username)
+	_, err := repo.Db.Exec("UPDATE users SET score = ?, role = ? WHERE username = ?", request.Score, request.Role, request.Username)
 
 	if err != nil {
 		return UpdateUserByUsernameResponse{}, err

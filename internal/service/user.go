@@ -10,6 +10,7 @@ type User struct {
 	Score    int    `json:"score"`
 	UserName string `json:"username"`
 	Rank     int    `json:"rank"`
+	Role     string `json:"role"`
 }
 
 type GetUserRequest struct {
@@ -49,6 +50,7 @@ func (service *UserService) GetUserByUserName(request GetUserRequest) (GetUserRe
 			Name:     response.User.Name,
 			Score:    response.User.Score,
 			UserName: response.User.UserName,
+			Role:     response.User.Role,
 		},
 	}, nil
 }
@@ -90,6 +92,7 @@ func (service *UserService) GetUsers(request GetUsersRequest) (GetUsersResponse,
 			Name:     repoResponse.Users[i].Name,
 			Score:    repoResponse.Users[i].Score,
 			UserName: repoResponse.Users[i].UserName,
+			Role:     repoResponse.Users[i].Role,
 		}
 
 		users = append(users, user)
@@ -100,12 +103,18 @@ func (service *UserService) GetUsers(request GetUsersRequest) (GetUsersResponse,
 	}, nil
 }
 
+type ScoreboardUser struct {
+	Username string
+	Score    int
+	Rank     int
+}
+
 type GetUsersScoreboardRequest struct {
 	Limit int
 }
 
 type GetUsersScoreboardResponse struct {
-	Users []User
+	Users []ScoreboardUser `json:"users"`
 }
 
 func (service *UserService) GetUsersScoreboard(request GetUsersScoreboardRequest) (GetUsersScoreboardResponse, error) {
@@ -119,10 +128,10 @@ func (service *UserService) GetUsersScoreboard(request GetUsersScoreboardRequest
 		return GetUsersScoreboardResponse{}, err
 	}
 
-	var users []User
+	var users []ScoreboardUser
 	for i := range res.Users {
-		user := User{
-			UserName: res.Users[i].UserName,
+		user := ScoreboardUser{
+			Username: res.Users[i].Username,
 			Score:    res.Users[i].Score,
 			Rank:     res.Users[i].Rank,
 		}
@@ -137,7 +146,8 @@ func (service *UserService) GetUsersScoreboard(request GetUsersScoreboardRequest
 
 type UpdateUserByUsernameRequest struct {
 	Username string
-	Score    int `json:"score"`
+	Score    int    `json:"score"`
+	Role     string `json:"role"`
 }
 
 type UpdateUserByUsernameResponse struct {
@@ -147,6 +157,7 @@ func (service *UserService) UpdateUserByUsername(request UpdateUserByUsernameReq
 	req := repo.UpdateUserByUsernameRequest{
 		Username: request.Username,
 		Score:    request.Score,
+		Role:     request.Role,
 	}
 
 	_, err := service.Repo.UpdateUserByUsername(req)
