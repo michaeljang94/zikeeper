@@ -151,3 +151,26 @@ func (repo *UserRepo) UpdateUserByUsername(request UpdateUserByUsernameRequest) 
 
 	return UpdateUserByUsernameResponse{}, nil
 }
+
+type GetPlayerRankingByUsernameRequest struct {
+	Username string
+}
+
+type GetPlayerRankingByUsernameResponse struct {
+	User ScoreboardUser
+}
+
+func (repo *UserRepo) GetPlayerRankingByUsername(request GetPlayerRankingByUsernameRequest) (GetPlayerRankingByUsernameResponse, error) {
+	row := repo.Db.QueryRow("SELECT username, score, user_rank FROM (SELECT username, score, DENSE_RANK() OVER (ORDER BY score DESC) AS user_rank FROM users WHERE role = 'user') AS rank_table WHERE username = ?", request.Username)
+
+	user := ScoreboardUser{}
+	if err := row.Scan(&user.Username, &user.Score, &user.Rank); err != nil {
+		if err == sql.ErrNoRows {
+			return GetPlayerRankingByUsernameResponse{}, err
+		}
+	}
+
+	return GetPlayerRankingByUsernameResponse{
+		User: user,
+	}, nil
+}

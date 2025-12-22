@@ -135,6 +135,7 @@ func main() {
 
 	// Users
 	protected.GET("/api/user/:id", userHandler.GetUserByUsername)
+	protected.GET("/api/user/:id/rank", userHandler.GetPlayerRankingByUsername)
 	roleProtected.GET("/api/users", userHandler.GetUsers)
 	roleProtected.GET("/api/users/scoreboard", userHandler.GetUsersScoreboard)
 	roleProtected.POST("/api/user/:id/update", userHandler.UpdateUserByUsername)

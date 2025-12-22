@@ -89,3 +89,23 @@ func (handler *UserHandler) UpdateUserByUsername(c *gin.Context) {
 
 	c.JSON(http.StatusOK, res)
 }
+
+func (handler *UserHandler) GetPlayerRankingByUsername(c *gin.Context) {
+	id := c.Param("id")
+
+	req := service.GetPlayerRankingByUsernameRequest{
+		Username: id,
+	}
+
+	res, err := handler.Service.GetPlayerRankingByUsername(req)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, res)
+}

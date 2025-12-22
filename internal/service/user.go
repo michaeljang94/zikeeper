@@ -9,7 +9,6 @@ type User struct {
 	Name     string `json:"name"`
 	Score    int    `json:"score"`
 	UserName string `json:"username"`
-	Rank     int    `json:"rank"`
 	Role     string `json:"role"`
 }
 
@@ -167,4 +166,32 @@ func (service *UserService) UpdateUserByUsername(request UpdateUserByUsernameReq
 	}
 
 	return UpdateUserByUsernameResponse{}, nil
+}
+
+type GetPlayerRankingByUsernameRequest struct {
+	Username string
+}
+
+type GetPlayerRankingByUsernameResponse struct {
+	User ScoreboardUser `json:"user"`
+}
+
+func (service *UserService) GetPlayerRankingByUsername(request GetPlayerRankingByUsernameRequest) (GetPlayerRankingByUsernameResponse, error) {
+	req := repo.GetPlayerRankingByUsernameRequest{
+		Username: request.Username,
+	}
+
+	res, err := service.Repo.GetPlayerRankingByUsername(req)
+
+	if err != nil {
+		return GetPlayerRankingByUsernameResponse{}, err
+	}
+
+	return GetPlayerRankingByUsernameResponse{
+		User: ScoreboardUser{
+			Username: res.User.Username,
+			Score:    res.User.Score,
+			Rank:     res.User.Rank,
+		},
+	}, nil
 }
