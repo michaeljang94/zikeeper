@@ -98,7 +98,8 @@ func main() {
 		TableRepo: &tableRepo,
 	}
 	playerSessionsService := service.PlayerSessionsService{
-		Repo: &playerSessionsRepo,
+		Repo:     &playerSessionsRepo,
+		UserRepo: &userRepo,
 	}
 	tableSessionsService := service.TableSessionsService{
 		Repo: &tableSessionsRepo,
@@ -152,6 +153,7 @@ func main() {
 	roleProtected.POST("/api/table/:table_name/session/create", tableSessionsHandler.CreateTableSession)
 	roleProtected.POST("/api/table/:table_name/session/delete", tableSessionsHandler.DeleteTableSessionBySessionId)
 	roleProtected.POST("/api/table/:table_name/session/:session_id/player/add", playerSessionsHandler.AddPlayerToPlayerSession)
+	roleProtected.POST("/api/table/:table_name/session/:session_id/player/delete", playerSessionsHandler.DeletePlayerFromPlayerSession)
 
 	router.Run()
 	// log.Fatal(autotls.Run(router, "api.zikeeper.com", "zikeeper.com"))

@@ -57,3 +57,30 @@ func (handler *PlayerSessionsHandler) AddPlayerToPlayerSession(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"status": "OK"})
 }
+
+func (handler *PlayerSessionsHandler) DeletePlayerFromPlayerSession(c *gin.Context) {
+	sessionId := c.Param("session_id")
+	tableName := c.Param("table_name")
+
+	request := service.DeletePlayerFromPlayerSessionRequest{
+		SessionId: sessionId,
+		TableName: tableName,
+	}
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	_, err := handler.Service.DeletePlayerFromPlayerSession(request)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "error",
+			"error":  err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": "OK"})
+}

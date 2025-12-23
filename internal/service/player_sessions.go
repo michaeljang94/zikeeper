@@ -3,7 +3,8 @@ package service
 import "github.com/michaeljang94/zikeeper/internal/repo"
 
 type PlayerSessionsService struct {
-	Repo *repo.PlayerSessionsRepo
+	Repo     *repo.PlayerSessionsRepo
+	UserRepo *repo.UserRepo
 }
 
 type AddPlayerToPlayerSessionRequest struct {
@@ -57,6 +58,15 @@ func (service *PlayerSessionsService) AddPlayerToPlayerSession(request AddPlayer
 	// Check that the session exists...
 
 	// TODO: Check user exists
+	userRequest := repo.GetUserRequest{
+		UserName: request.Player.Name,
+	}
+
+	_, userErr := service.UserRepo.GetUserByUserName(userRequest)
+
+	if userErr != nil {
+		return AddPlayerToPlayerSessionResponse{}, userErr
+	}
 
 	// TODO: Check to ensure user is not already in the table
 
@@ -75,4 +85,27 @@ func (service *PlayerSessionsService) AddPlayerToPlayerSession(request AddPlayer
 	}
 
 	return AddPlayerToPlayerSessionResponse{}, nil
+}
+
+type DeletePlayerFromPlayerSessionRequest struct {
+	SessionId string
+	TableName string
+	Username  string `json:"username"`
+}
+
+type DeletePlayerFromPlayerSessionResponse struct {
+}
+
+func (service *PlayerSessionsService) DeletePlayerFromPlayerSession(request DeletePlayerFromPlayerSessionRequest) (DeletePlayerFromPlayerSessionResponse, error) {
+	req := repo.DeletePlayerFromPlayerSessionRequest{
+		Username: request.Username,
+	}
+
+	_, err := service.Repo.DeletePlayerFromPlayerSession(req)
+
+	if err != nil {
+		return DeletePlayerFromPlayerSessionResponse{}, err
+	}
+
+	return DeletePlayerFromPlayerSessionResponse{}, nil
 }

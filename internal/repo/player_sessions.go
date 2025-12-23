@@ -84,3 +84,24 @@ func (repo *PlayerSessionsRepo) DeletePlayerSessionsByTableName(request DeletePl
 
 	return DeletePlayerSessionsByTableNameResponse{}, nil
 }
+
+type DeletePlayerFromPlayerSessionRequest struct {
+	SessionId string
+	TableName string
+	Username  string
+}
+
+type DeletePlayerFromPlayerSessionResponse struct {
+}
+
+func (repo *PlayerSessionsRepo) DeletePlayerFromPlayerSession(request DeletePlayerFromPlayerSessionRequest) (DeletePlayerFromPlayerSessionResponse, error) {
+	_, err := repo.Db.Exec("DELETE FROM player_sessions WHERE username = ?", request.Username)
+
+	if err != nil {
+		fmt.Println(err)
+
+		return DeletePlayerFromPlayerSessionResponse{}, err
+	}
+
+	return DeletePlayerFromPlayerSessionResponse{}, nil
+}
