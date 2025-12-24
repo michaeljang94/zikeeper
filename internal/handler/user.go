@@ -100,6 +100,17 @@ func (handler *UserHandler) GetUsersScoreboard(c *gin.Context) {
 func (handler *UserHandler) UpdateUserByUsername(c *gin.Context) {
 	id := c.Param("id")
 
+	tokenUsername := c.GetString("username")
+	role := c.GetString("role")
+
+	if id != tokenUsername && role != "admin" {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status": "error",
+			"error":  "Unauthorized for user",
+		})
+		return
+	}
+
 	req := service.UpdateUserByUsernameRequest{
 		Username: id,
 	}
@@ -124,6 +135,17 @@ func (handler *UserHandler) UpdateUserByUsername(c *gin.Context) {
 
 func (handler *UserHandler) GetPlayerRankingByUsername(c *gin.Context) {
 	id := c.Param("id")
+
+	tokenUsername := c.GetString("username")
+	role := c.GetString("role")
+
+	if id != tokenUsername && role != "admin" {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status": "error",
+			"error":  "Unauthorized for user",
+		})
+		return
+	}
 
 	req := service.GetPlayerRankingByUsernameRequest{
 		Username: id,
