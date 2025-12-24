@@ -29,6 +29,16 @@ type GetTableSessionsResponse struct {
 
 type TableSession struct {
 	SessionId string `json:"session_id"`
+	TableName string `json:"table_name"`
+	Dealer    string `json:"dealer"`
+}
+
+type GetTableSessionBySessionIdRequest struct {
+	SessionId string
+}
+
+type GetTableSessionBySessionIdResponse struct {
+	TableSession TableSession `json:"table_session"`
 }
 
 func (service *TableSessionsService) GetTableSessions(request GetTableSessionsRequest) (GetTableSessionsResponse, error) {
@@ -46,6 +56,8 @@ func (service *TableSessionsService) GetTableSessions(request GetTableSessionsRe
 	for i := range res.TableSessions {
 		tableSession := TableSession{
 			SessionId: res.TableSessions[i].SessionId,
+			TableName: res.TableSessions[i].TableName,
+			Dealer:    res.TableSessions[i].Dealer.String,
 		}
 
 		tableSessions = append(tableSessions, tableSession)

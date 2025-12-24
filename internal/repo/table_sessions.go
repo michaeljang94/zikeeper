@@ -2,6 +2,7 @@ package repo
 
 import (
 	"database/sql"
+	"fmt"
 )
 
 type TableSessionsRepo struct {
@@ -11,7 +12,7 @@ type TableSessionsRepo struct {
 type TableSession struct {
 	SessionId string
 	TableName string
-	Dealer    string
+	Dealer    sql.NullString
 }
 
 type CreateTableSessionRequest struct {
@@ -56,7 +57,7 @@ func (repo *TableSessionsRepo) GetTableSessionBySessionId(request GetTableSessio
 	row := repo.Db.QueryRow("SELECT session_id, table_name, dealer FROM table_sessions WHERE session_id = ?", request.SessionId)
 
 	tableSession := TableSession{}
-	if err := row.Scan(&tableSession.SessionId, &tableSession.TableName, &tableSession.Dealer); err != nil {
+	if err := row.Scan(&tableSession.SessionId, &tableSession.TableName, tableSession.Dealer); err != nil {
 		if err == sql.ErrNoRows {
 			return GetTableSessionBySessionIdResponse{}, err
 		}
@@ -68,7 +69,7 @@ func (repo *TableSessionsRepo) GetTableSessionBySessionId(request GetTableSessio
 }
 
 func (repo *TableSessionsRepo) GetTableSessions(request GetTableSessionsRequest) (GetTableSessionsResponse, error) {
-	rows, err := repo.Db.Query("SELECT session_id FROM table_sessions WHERE table_name = ?", request.TableName)
+	rows, err := repo.Db.Query("SELECT session_id, table_name, dealer FROM table_sessions WHERE table_name = ?", request.TableName)
 
 	if err != nil {
 		return GetTableSessionsResponse{}, err
@@ -80,7 +81,8 @@ func (repo *TableSessionsRepo) GetTableSessions(request GetTableSessionsRequest)
 	for rows.Next() {
 		var tableSession TableSession
 
-		if err := rows.Scan(&tableSession.SessionId); err != nil {
+		if err := rows.Scan(&tableSession.SessionId, &tableSession.TableName, &tableSession.Dealer); err != nil {
+			fmt.Println(err)
 			return GetTableSessionsResponse{}, err
 		}
 
