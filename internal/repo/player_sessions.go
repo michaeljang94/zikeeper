@@ -37,6 +37,35 @@ type DeletePlayerSessionsByTableNameRequest struct {
 type DeletePlayerSessionsByTableNameResponse struct {
 }
 
+type GetPlayerSessionByUsernameRequest struct {
+	Username string
+}
+
+type GetPlayerSessionByUsernameResponse struct {
+	PlayerSession PlayerSessionObject
+}
+
+type PlayerSessionObject struct {
+	SessionId string
+	TableName string
+	Username  string
+}
+
+func (repo *PlayerSessionsRepo) GetPlayerSessionByUsername(request GetPlayerSessionByUsernameRequest) (GetPlayerSessionByUsernameResponse, error) {
+	row := repo.Db.QueryRow("SELECT session_id, table_name, username FROM player_sessions WHERE username = ?", request.Username)
+
+	playerSession := PlayerSessionObject{}
+	if err := row.Scan(&playerSession.SessionId, &playerSession.TableName, &playerSession.Username); err != nil {
+		if err == sql.ErrNoRows {
+			return GetPlayerSessionByUsernameResponse{}, err
+		}
+	}
+
+	return GetPlayerSessionByUsernameResponse{
+		PlayerSession: playerSession,
+	}, nil
+}
+
 func (repo *PlayerSessionsRepo) GetPlayersForSessionId(request GetPlayersForSessionIdRequest) (GetPlayersForSessionIdResponse, error) {
 	rows, err := repo.Db.Query("SELECT username FROM player_sessions WHERE session_id = ?", request.SessionId)
 

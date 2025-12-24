@@ -8,7 +8,39 @@ import (
 )
 
 type UserHandler struct {
-	Service *service.UserService
+	Service               *service.UserService
+	PlayerSessionsService *service.PlayerSessionsService
+}
+
+func (handler *UserHandler) GetSessionInfoByUsername(c *gin.Context) {
+	username := c.Param("id")
+
+	tokenUsername := c.GetString("username")
+	role := c.GetString("role")
+
+	if username != tokenUsername && role != "admin" {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"status": "error",
+			"error":  "Unauthorized for user",
+		})
+		return
+	}
+
+	req := service.GetPlayerSessionByUsernameRequest{
+		Username: username,
+	}
+
+	res, err := handler.PlayerSessionsService.GetPlayerSessionByUsername(req)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "error",
+			"error":  err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, res)
 }
 
 func (handler *UserHandler) GetUsers(c *gin.Context) {

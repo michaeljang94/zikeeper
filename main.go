@@ -106,7 +106,8 @@ func main() {
 	}
 
 	userHandler := handler.UserHandler{
-		Service: &userService,
+		Service:               &userService,
+		PlayerSessionsService: &playerSessionsService,
 	}
 	authHandler := handler.AuthHandler{
 		Service: &authService,
@@ -136,6 +137,7 @@ func main() {
 
 	// Users
 	protected.GET("/api/user/:id", userHandler.GetUserByUsername)
+	protected.GET("/api/user/:id/session", userHandler.GetSessionInfoByUsername)
 	protected.GET("/api/user/:id/rank", userHandler.GetPlayerRankingByUsername)
 	roleProtected.GET("/api/users", userHandler.GetUsers)
 	roleProtected.GET("/api/users/scoreboard", userHandler.GetUsersScoreboard)
@@ -146,12 +148,14 @@ func main() {
 	roleProtected.GET("/api/tables", tableHandler.GetTables)
 	roleProtected.GET("/api/table/:table_name/sessions", tableSessionsHandler.GetTableSessions)
 	roleProtected.POST("/api/table/:table_name/sessions/delete", tableSessionsHandler.DeleteTableSessionsByTableName)
-	roleProtected.GET("/api/table/:table_name/session/:session_id/players", playerSessionsHandler.GetPlayersForSessionId)
+	roleProtected.POST("/api/table/:table_name/session/create", tableSessionsHandler.CreateTableSession)
+	roleProtected.POST("/api/table/:table_name/session/delete", tableSessionsHandler.DeleteTableSessionBySessionId)
 
 	roleProtected.POST("/api/table/create", tableHandler.CreateTable)
 	roleProtected.POST("/api/table/delete", tableHandler.DeleteTable)
-	roleProtected.POST("/api/table/:table_name/session/create", tableSessionsHandler.CreateTableSession)
-	roleProtected.POST("/api/table/:table_name/session/delete", tableSessionsHandler.DeleteTableSessionBySessionId)
+
+	// Sessions
+	roleProtected.GET("/api/table/:table_name/session/:session_id/players", playerSessionsHandler.GetPlayersForSessionId)
 	roleProtected.POST("/api/table/:table_name/session/:session_id/player/add", playerSessionsHandler.AddPlayerToPlayerSession)
 	roleProtected.POST("/api/table/:table_name/session/:session_id/player/delete", playerSessionsHandler.DeletePlayerFromPlayerSession)
 

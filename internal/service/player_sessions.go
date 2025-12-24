@@ -1,6 +1,8 @@
 package service
 
-import "github.com/michaeljang94/zikeeper/internal/repo"
+import (
+	"github.com/michaeljang94/zikeeper/internal/repo"
+)
 
 type PlayerSessionsService struct {
 	Repo     *repo.PlayerSessionsRepo
@@ -26,6 +28,40 @@ type GetPlayersForSessionIdResponse struct {
 
 type Player struct {
 	Name string `json:"name"`
+}
+
+type GetPlayerSessionByUsernameRequest struct {
+	Username string
+}
+
+type GetPlayerSessionByUsernameResponse struct {
+	PlayerSession PlayerSessionObject `json:"player_session"`
+}
+
+type PlayerSessionObject struct {
+	SessionId string `json:"session_id"`
+	TableName string `json:"table_name"`
+	Username  string `json:"username"`
+}
+
+func (service *PlayerSessionsService) GetPlayerSessionByUsername(request GetPlayerSessionByUsernameRequest) (GetPlayerSessionByUsernameResponse, error) {
+	req := repo.GetPlayerSessionByUsernameRequest{
+		Username: request.Username,
+	}
+
+	res, err := service.Repo.GetPlayerSessionByUsername(req)
+
+	if err != nil {
+		return GetPlayerSessionByUsernameResponse{}, err
+	}
+
+	return GetPlayerSessionByUsernameResponse{
+		PlayerSession: PlayerSessionObject{
+			SessionId: res.PlayerSession.SessionId,
+			TableName: res.PlayerSession.TableName,
+			Username:  res.PlayerSession.Username,
+		},
+	}, nil
 }
 
 func (service *PlayerSessionsService) GetPlayersForSessionId(request GetPlayersForSessionIdRequest) (GetPlayersForSessionIdResponse, error) {

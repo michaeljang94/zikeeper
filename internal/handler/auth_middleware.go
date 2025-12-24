@@ -32,13 +32,13 @@ func AuthMiddlewareWithRoles(roles []string) gin.HandlerFunc {
 		})
 
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			c.Set("username", claims["username"])
-			c.Set("role", claims["role"])
-
 			if !slices.Contains(roles, claims["role"].(string)) {
 				c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 				c.Abort()
 			}
+
+			c.Set("username", claims["username"])
+			c.Set("role", claims["role"])
 
 			c.Next()
 		} else {
