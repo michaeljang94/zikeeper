@@ -144,7 +144,7 @@ func main() {
 	roleProtected.POST("/api/user/:id/update", userHandler.UpdateUserByUsername)
 
 	// Tables
-	roleProtected.GET("/api/table/:table_name", tableHandler.GetTableByName)
+	protected.GET("/api/table/:table_name", tableHandler.GetTableByName)
 	roleProtected.GET("/api/tables", tableHandler.GetTables)
 	roleProtected.GET("/api/table/:table_name/sessions", tableSessionsHandler.GetTableSessions)
 	roleProtected.POST("/api/table/:table_name/sessions/delete", tableSessionsHandler.DeleteTableSessionsByTableName)
