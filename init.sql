@@ -32,9 +32,13 @@ CREATE TABLE IF NOT EXISTS player_sessions(
 CREATE TABLE IF NOT EXISTS table_sessions(
     table_name varchar(255),
     session_id varchar(36) DEFAULT (UUID()),
-    CONSTRAINT uc_session_id UNIQUE (session_id)
+    dealer varchar(255),
+    CONSTRAINT uc_session_id UNIQUE (session_id),
+    CONSTRAINT uc_dealer UNIQUE (dealer)
 );
 
+INSERT INTO users
+VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668266", "admin", 0, "admin", "12345", "12345", "admin");
 
 -- INSERT INTO tables
 -- VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668266", "Table1", "black_jack");

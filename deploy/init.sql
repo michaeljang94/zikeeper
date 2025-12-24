@@ -31,7 +31,9 @@ CREATE TABLE IF NOT EXISTS player_sessions(
 CREATE TABLE IF NOT EXISTS table_sessions(
     table_name varchar(255),
     session_id varchar(36) DEFAULT (UUID()),
-    CONSTRAINT uc_session_id UNIQUE (session_id)
+    dealer varchar(255),
+    CONSTRAINT uc_session_id UNIQUE (session_id),
+    CONSTRAINT uc_dealer UNIQUE (dealer)
 );
 
 
