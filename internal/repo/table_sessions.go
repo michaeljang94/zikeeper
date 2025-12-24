@@ -10,6 +10,8 @@ type TableSessionsRepo struct {
 
 type TableSession struct {
 	SessionId string
+	TableName string
+	Dealer    string
 }
 
 type CreateTableSessionRequest struct {
@@ -40,6 +42,29 @@ type DeleteTableSessionBySessionIdRequest struct {
 }
 
 type DeleteTableSessionBySessionIdResponse struct {
+}
+
+type GetTableSessionBySessionIdRequest struct {
+	SessionId string
+}
+
+type GetTableSessionBySessionIdResponse struct {
+	TableSession TableSession
+}
+
+func (repo *TableSessionsRepo) GetTableSessionBySessionId(request GetTableSessionBySessionIdRequest) (GetTableSessionBySessionIdResponse, error) {
+	row := repo.Db.QueryRow("SELECT session_id, table_name, dealer FROM table_sessions WHERE session_id = ?", request.SessionId)
+
+	tableSession := TableSession{}
+	if err := row.Scan(&tableSession.SessionId, &tableSession.TableName, &tableSession.Dealer); err != nil {
+		if err == sql.ErrNoRows {
+			return GetTableSessionBySessionIdResponse{}, err
+		}
+	}
+
+	return GetTableSessionBySessionIdResponse{
+		TableSession: tableSession,
+	}, nil
 }
 
 func (repo *TableSessionsRepo) GetTableSessions(request GetTableSessionsRequest) (GetTableSessionsResponse, error) {
