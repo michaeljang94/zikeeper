@@ -102,7 +102,8 @@ func main() {
 		UserRepo: &userRepo,
 	}
 	tableSessionsService := service.TableSessionsService{
-		Repo: &tableSessionsRepo,
+		Repo:     &tableSessionsRepo,
+		UserRepo: &userRepo,
 	}
 
 	userHandler := handler.UserHandler{
@@ -150,6 +151,9 @@ func main() {
 	roleProtected.POST("/api/table/:table_name/sessions/delete", tableSessionsHandler.DeleteTableSessionsByTableName)
 	roleProtected.POST("/api/table/:table_name/session/create", tableSessionsHandler.CreateTableSession)
 	roleProtected.POST("/api/table/:table_name/session/delete", tableSessionsHandler.DeleteTableSessionBySessionId)
+
+	roleProtected.POST("/api/table/:table_name/session/:session_id/dealer/add", tableSessionsHandler.AddDealerToTableSession)
+	roleProtected.POST("/api/table/:table_name/session/:session_id/dealer/remove", tableSessionsHandler.RemoveDealerFromTableSession)
 
 	roleProtected.POST("/api/table/create", tableHandler.CreateTable)
 	roleProtected.POST("/api/table/delete", tableHandler.DeleteTable)

@@ -53,6 +53,41 @@ type GetTableSessionBySessionIdResponse struct {
 	TableSession TableSession
 }
 
+type AddDealerToTableSessionRequest struct {
+	SessionId string
+	Dealer    string
+}
+
+type AddDealerToTableSessionResponse struct {
+}
+
+type RemoveDealerFromTableSessionRequest struct {
+	SessionId string
+}
+
+type RemoveDealerFromTableSessionResponse struct {
+}
+
+func (repo *TableSessionsRepo) RemoveDealerFromTableSession(request RemoveDealerFromTableSessionRequest) (RemoveDealerFromTableSessionResponse, error) {
+	_, err := repo.Db.Exec("UPDATE table_sessions SET dealer = ? WHERE session_id = ?", sql.NullString{}, request.SessionId)
+
+	if err != nil {
+		return RemoveDealerFromTableSessionResponse{}, err
+	}
+
+	return RemoveDealerFromTableSessionResponse{}, nil
+}
+
+func (repo *TableSessionsRepo) AddDealerToTableSession(request AddDealerToTableSessionRequest) (AddDealerToTableSessionResponse, error) {
+	_, err := repo.Db.Exec("UPDATE table_sessions SET dealer = ? WHERE session_id = ?", request.Dealer, request.SessionId)
+
+	if err != nil {
+		return AddDealerToTableSessionResponse{}, err
+	}
+
+	return AddDealerToTableSessionResponse{}, nil
+}
+
 func (repo *TableSessionsRepo) GetTableSessionBySessionId(request GetTableSessionBySessionIdRequest) (GetTableSessionBySessionIdResponse, error) {
 	row := repo.Db.QueryRow("SELECT session_id, table_name, dealer FROM table_sessions WHERE session_id = ?", request.SessionId)
 

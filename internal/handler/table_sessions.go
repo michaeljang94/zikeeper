@@ -11,6 +11,51 @@ type TableSessionsHandler struct {
 	Service *service.TableSessionsService
 }
 
+func (handler *TableSessionsHandler) AddDealerToTableSession(c *gin.Context) {
+	sessionId := c.Param("session_id")
+
+	request := service.AddDealerToTableSessionRequest{
+		SessionId: sessionId,
+	}
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	response, err := handler.Service.AddDealerToTableSession(request)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "error",
+			"error":  err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+
+func (handler *TableSessionsHandler) RemoveDealerFromTableSession(c *gin.Context) {
+	sessionId := c.Param("session_id")
+
+	request := service.RemoveDealerFromTableSessionRequest{
+		SessionId: sessionId,
+	}
+
+	response, err := handler.Service.RemoveDealerFromTableSession(request)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "error",
+			"error":  err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+
 func (handler *TableSessionsHandler) DeleteTableSessionsByTableName(c *gin.Context) {
 	tableName := c.Param("table_name")
 

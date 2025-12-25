@@ -8,7 +8,8 @@ import (
 )
 
 type TableSessionsService struct {
-	Repo *repo.TableSessionsRepo
+	Repo     *repo.TableSessionsRepo
+	UserRepo *repo.UserRepo
 }
 
 type CreateTableSessionRequest struct {
@@ -39,6 +40,64 @@ type GetTableSessionBySessionIdRequest struct {
 
 type GetTableSessionBySessionIdResponse struct {
 	TableSession TableSession `json:"table_session"`
+}
+
+type AddDealerToTableSessionRequest struct {
+	SessionId string
+	Dealer    string `json:"dealer"`
+}
+
+type AddDealerToTableSessionResponse struct {
+}
+
+type RemoveDealerFromTableSessionRequest struct {
+	SessionId string
+}
+
+type RemoveDealerFromTableSessionResponse struct {
+}
+
+func (service *TableSessionsService) RemoveDealerFromTableSession(request RemoveDealerFromTableSessionRequest) (RemoveDealerFromTableSessionResponse, error) {
+	req := repo.RemoveDealerFromTableSessionRequest{
+		SessionId: request.SessionId,
+	}
+
+	_, err := service.Repo.RemoveDealerFromTableSession(req)
+
+	if err != nil {
+		return RemoveDealerFromTableSessionResponse{}, err
+	}
+
+	return RemoveDealerFromTableSessionResponse{}, nil
+}
+
+func (service *TableSessionsService) AddDealerToTableSession(request AddDealerToTableSessionRequest) (AddDealerToTableSessionResponse, error) {
+	userReq := repo.GetUserRequest{
+		UserName: request.Dealer,
+	}
+
+	userRes, userErr := service.UserRepo.GetUserByUserName(userReq)
+
+	if userErr != nil {
+		return AddDealerToTableSessionResponse{}, userErr
+	}
+
+	if userRes.User.Role != "dealer" {
+		return AddDealerToTableSessionResponse{}, errors.New("User is not a dealer role")
+	}
+
+	req := repo.AddDealerToTableSessionRequest{
+		SessionId: request.SessionId,
+		Dealer:    request.Dealer,
+	}
+
+	_, err := service.Repo.AddDealerToTableSession(req)
+
+	if err != nil {
+		return AddDealerToTableSessionResponse{}, err
+	}
+
+	return AddDealerToTableSessionResponse{}, nil
 }
 
 func (service *TableSessionsService) GetTableSessions(request GetTableSessionsRequest) (GetTableSessionsResponse, error) {
