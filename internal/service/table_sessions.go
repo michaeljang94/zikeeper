@@ -32,6 +32,7 @@ type TableSession struct {
 	SessionId string `json:"session_id"`
 	TableName string `json:"table_name"`
 	Dealer    string `json:"dealer"`
+	Status    string `json:"status"`
 }
 
 type GetTableSessionBySessionIdRequest struct {
@@ -117,6 +118,7 @@ func (service *TableSessionsService) GetTableSessions(request GetTableSessionsRe
 			SessionId: res.TableSessions[i].SessionId,
 			TableName: res.TableSessions[i].TableName,
 			Dealer:    res.TableSessions[i].Dealer.String,
+			Status:    res.TableSessions[i].Status,
 		}
 
 		tableSessions = append(tableSessions, tableSession)
