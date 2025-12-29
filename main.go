@@ -140,6 +140,10 @@ func main() {
 	roleProtected := router.Group("/", handler.AuthMiddlewareWithRoles([]string{"admin"}))
 	dealerProtected := router.Group("/", handler.AuthMiddlewareWithRoles([]string{"dealer"}))
 
+	// Update player bet
+	// Update total pool
+	// Update player turn
+
 	// Users
 	protected.GET("/api/user/:id", userHandler.GetUserByUsername)
 	protected.GET("/api/user/:id/session", userHandler.GetSessionInfoByUsername)

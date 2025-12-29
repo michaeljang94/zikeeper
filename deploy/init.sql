@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS player_sessions(
     session_id varchar(36) DEFAULT (UUID()),
     table_name varchar(255),
     username varchar(255),
+    bet int default(0),
     CONSTRAINT uc_username UNIQUE (username)
 );
 
@@ -38,9 +39,19 @@ CREATE TABLE IF NOT EXISTS table_sessions(
     dealer varchar(255),
     status ENUM("waiting", "gaming") default ("waiting"),
     money_pool int default (0),
+    turn varchar(255),
     CONSTRAINT uc_session_id UNIQUE (session_id),
     CONSTRAINT uc_dealer UNIQUE (dealer)
 );
 
 INSERT INTO users
 VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668266", "admin", 0, "admin", "12345", "12345", 0, 0, 0, "admin");
+
+INSERT INTO users
+VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668261", "user1", 0, "user1", "12345", "12345", 1, 1, 1, "user");
+
+INSERT INTO users
+VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668262", "user2", 0, "user2", "12345", "12345", 2, 2, 2, "user");
+
+INSERT INTO users
+VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668263", "dealer1", 0, "dealer1", "12345", "12345", 3, 3, 3, "dealer");
