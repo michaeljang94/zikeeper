@@ -267,3 +267,33 @@ func (service *TableSessionsService) CreateTableSession(request CreateTableSessi
 		SessionId: sessionId.String(),
 	}, nil
 }
+
+type GetTableSessionByDealerRequest struct {
+	Dealer string
+}
+
+type GetTableSessionByDealerResponse struct {
+	TableSession TableSession `json:"table_session"`
+}
+
+func (service *TableSessionsService) GetTableSessionByDealer(request GetTableSessionByDealerRequest) (GetTableSessionByDealerResponse, error) {
+	req := repo.GetTableSessionByDealerRequest{
+		Dealer: request.Dealer,
+	}
+
+	res, err := service.Repo.GetTableSessionByDealer(req)
+
+	if err != nil {
+		return GetTableSessionByDealerResponse{}, err
+	}
+
+	return GetTableSessionByDealerResponse{
+		TableSession: TableSession{
+			SessionId: res.TableSession.SessionId,
+			TableName: res.TableSession.TableName,
+			Dealer:    res.TableSession.Dealer.String,
+			Status:    res.TableSession.Status,
+			Pool:      res.TableSession.Pool,
+		},
+	}, nil
+}

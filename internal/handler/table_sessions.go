@@ -140,3 +140,23 @@ func (handler *TableSessionsHandler) DeleteTableSessionBySessionId(c *gin.Contex
 
 	c.JSON(http.StatusOK, response)
 }
+
+func (handler *TableSessionsHandler) GetTableSessionByDealer(c *gin.Context) {
+	dealerName := c.Param("id")
+
+	request := service.GetTableSessionByDealerRequest{
+		Dealer: dealerName,
+	}
+
+	response, err := handler.Service.GetTableSessionByDealer(request)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "error",
+			"error":  err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}

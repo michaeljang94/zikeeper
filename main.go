@@ -136,6 +136,7 @@ func main() {
 
 	protected := router.Group("/", handler.AuthMiddleware())
 	roleProtected := router.Group("/", handler.AuthMiddlewareWithRoles([]string{"admin"}))
+	dealerProtected := router.Group("/", handler.AuthMiddlewareWithRoles([]string{"dealer"}))
 
 	// Users
 	protected.GET("/api/user/:id", userHandler.GetUserByUsername)
@@ -160,6 +161,7 @@ func main() {
 	roleProtected.POST("/api/table/delete", tableHandler.DeleteTable)
 
 	// Sessions
+	dealerProtected.GET("/api/dealer/:id/session", tableSessionsHandler.GetTableSessionByDealer)
 	roleProtected.GET("/api/table/:table_name/session/:session_id/players", playerSessionsHandler.GetPlayersForSessionId)
 	roleProtected.POST("/api/table/:table_name/session/:session_id/player/add", playerSessionsHandler.AddPlayerToPlayerSession)
 	roleProtected.POST("/api/table/:table_name/session/:session_id/player/delete", playerSessionsHandler.DeletePlayerFromPlayerSession)

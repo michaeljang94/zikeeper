@@ -160,3 +160,28 @@ func (repo *TableSessionsRepo) DeleteTableSessionBySessionId(request DeleteTable
 
 	return DeleteTableSessionBySessionIdResponse{}, nil
 }
+
+type GetTableSessionByDealerRequest struct {
+	Dealer string
+}
+
+type GetTableSessionByDealerResponse struct {
+	TableSession TableSession
+}
+
+func (repo *TableSessionsRepo) GetTableSessionByDealer(request GetTableSessionByDealerRequest) (GetTableSessionByDealerResponse, error) {
+	row := repo.Db.QueryRow("SELECT session_id, table_name, dealer, status, money_pool FROM table_sessions WHERE dealer = ?", request.Dealer)
+
+	tableSession := TableSession{}
+	if err := row.Scan(&tableSession.SessionId, &tableSession.TableName, &tableSession.Dealer, &tableSession.Status, &tableSession.Pool); err != nil {
+		if err == sql.ErrNoRows {
+			return GetTableSessionByDealerResponse{}, err
+		}
+
+		return GetTableSessionByDealerResponse{}, err
+	}
+
+	return GetTableSessionByDealerResponse{
+		TableSession: tableSession,
+	}, nil
+}
