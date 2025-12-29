@@ -45,6 +45,15 @@ CREATE TABLE IF NOT EXISTS table_sessions(
 INSERT INTO users
 VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668266", "admin", 0, "admin", "12345", "12345", 0, 0, 0, "admin");
 
+INSERT INTO users
+VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668261", "user1", 0, "user1", "12345", "12345", 1, 1, 1, "user");
+
+INSERT INTO users
+VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668262", "user2", 0, "user2", "12345", "12345", 2, 2, 2, "user");
+
+INSERT INTO users
+VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668263", "dealer1", 0, "dealer1", "12345", "12345", 3, 3, 3, "dealer");
+
 -- INSERT INTO tables
 -- VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668266", "Table1", "black_jack");
 

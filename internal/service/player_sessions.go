@@ -1,6 +1,8 @@
 package service
 
 import (
+	"errors"
+
 	"github.com/michaeljang94/zikeeper/internal/repo"
 )
 
@@ -38,6 +40,7 @@ type GetPlayerSessionByUsernameRequest struct {
 type GetPlayerSessionByUsernameResponse struct {
 	PlayerSession PlayerSessionObject `json:"player_session"`
 	TableSession  TableSession        `json:"table_session"`
+	Players       []Player            `json:"players"`
 }
 
 type PlayerSessionObject struct {
@@ -68,6 +71,17 @@ func (service *PlayerSessionsService) GetPlayerSessionByUsername(request GetPlay
 		return GetPlayerSessionByUsernameResponse{}, err
 	}
 
+	// Get all session players
+	playersReq := GetPlayersForSessionIdRequest{
+		SessionId: res.PlayerSession.SessionId,
+	}
+
+	playersRes, playersErr := service.GetPlayersForSessionId(playersReq)
+
+	if playersErr != nil {
+		return GetPlayerSessionByUsernameResponse{}, err
+	}
+
 	return GetPlayerSessionByUsernameResponse{
 		PlayerSession: PlayerSessionObject{
 			SessionId: res.PlayerSession.SessionId,
@@ -79,6 +93,7 @@ func (service *PlayerSessionsService) GetPlayerSessionByUsername(request GetPlay
 			Status: tableSessionRes.TableSession.Status,
 			Pool:   tableSessionRes.TableSession.Pool,
 		},
+		Players: playersRes.Players,
 	}, nil
 }
 
@@ -116,10 +131,15 @@ func (service *PlayerSessionsService) AddPlayerToPlayerSession(request AddPlayer
 		UserName: request.Player.Name,
 	}
 
-	_, userErr := service.UserRepo.GetUserByUserName(userRequest)
+	user, userErr := service.UserRepo.GetUserByUserName(userRequest)
 
 	if userErr != nil {
 		return AddPlayerToPlayerSessionResponse{}, userErr
+	}
+
+	// Check that the user is not a dealer
+	if user.User.Role == "dealer" {
+		return AddPlayerToPlayerSessionResponse{}, errors.New("dealers cannot player games")
 	}
 
 	// TODO: Check to ensure user is not already in the table
