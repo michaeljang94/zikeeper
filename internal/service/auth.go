@@ -31,10 +31,11 @@ type AuthenticateUserResponse struct {
 }
 
 type CreateAuthUserRequest struct {
-	Name     string `json:"name"`
-	Username string `json:"username"`
-	Pincode  string `json:"pincode"`
-	Password string `json:"password"`
+	Name          string        `json:"name"`
+	Username      string        `json:"username"`
+	Pincode       string        `json:"pincode"`
+	Password      string        `json:"password"`
+	StudentNumber StudentNumber `json:"student_number"`
 }
 
 type CreateAuthUserResponse struct {
@@ -51,6 +52,11 @@ func (service *AuthService) CreateNewUser(request CreateAuthUserRequest) (Create
 		UserName: request.Username,
 		Password: request.Password,
 		Pincode:  request.Pincode,
+		StudentNumber: repo.StudentNumber{
+			Year:   request.StudentNumber.Year,
+			Class:  request.StudentNumber.Class,
+			Number: request.StudentNumber.Number,
+		},
 	}
 
 	response, err := service.AuthRepo.CreateNewUser(repoRequest)

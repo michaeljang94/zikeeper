@@ -28,12 +28,13 @@ type AuthUser struct {
 }
 
 type CreateUserRequest struct {
-	Id       string
-	Name     string
-	Score    int
-	UserName string
-	Password string
-	Pincode  string
+	Id            string
+	Name          string
+	Score         int
+	UserName      string
+	Password      string
+	Pincode       string
+	StudentNumber StudentNumber
 }
 
 type CreateUserResponse struct {
@@ -56,8 +57,9 @@ func (repo *AuthRepo) GetUserByUsername(request GetAuthUserbyUsernameRequest) (G
 }
 
 func (repo *AuthRepo) CreateNewUser(request CreateUserRequest) (CreateUserResponse, error) {
-	_, err := repo.Db.Exec("INSERT INTO users (id, name, score, username, password, pincode, role) VALUES (?, ?, ?, ?, ?, ?, ?)",
-		request.Id, request.Name, request.Score, request.UserName, request.Password, request.Pincode, "user")
+	_, err := repo.Db.Exec("INSERT INTO users (id, name, score, username, password, pincode, role, student_year, student_class, student_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		request.Id, request.Name, request.Score, request.UserName, request.Password, request.Pincode, "user",
+		request.StudentNumber.Year, request.StudentNumber.Class, request.StudentNumber.Number)
 
 	if err != nil {
 		if mysqlErr, ok := err.(*mysql.MySQLError); ok && mysqlErr.Number == 1062 {

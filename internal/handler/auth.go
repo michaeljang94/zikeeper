@@ -25,6 +25,8 @@ func (handler *AuthHandler) CreateNewUser(c *gin.Context) {
 	if err != nil {
 		if err.Error() == "duplicate entry" {
 			c.JSON(http.StatusConflict, "duplicate entry")
+		} else {
+			c.JSON(http.StatusInternalServerError, err)
 		}
 
 		return

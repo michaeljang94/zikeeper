@@ -4,12 +4,19 @@ import (
 	"github.com/michaeljang94/zikeeper/internal/repo"
 )
 
+type StudentNumber struct {
+	Year   int `json:"year"`
+	Class  int `json:"class"`
+	Number int `json:"number"`
+}
+
 type User struct {
-	Id       string `json:"id"`
-	Name     string `json:"name"`
-	Score    int    `json:"score"`
-	UserName string `json:"username"`
-	Role     string `json:"role"`
+	Id            string        `json:"id"`
+	Name          string        `json:"name"`
+	Score         int           `json:"score"`
+	UserName      string        `json:"username"`
+	Role          string        `json:"role"`
+	StudentNumber StudentNumber `json:"student_number"`
 }
 
 type GetUserRequest struct {
@@ -50,6 +57,11 @@ func (service *UserService) GetUserByUserName(request GetUserRequest) (GetUserRe
 			Score:    response.User.Score,
 			UserName: response.User.UserName,
 			Role:     response.User.Role,
+			StudentNumber: StudentNumber{
+				Year:   response.User.StudentNumber.Year,
+				Class:  response.User.StudentNumber.Class,
+				Number: response.User.StudentNumber.Number,
+			},
 		},
 	}, nil
 }
@@ -92,6 +104,11 @@ func (service *UserService) GetUsers(request GetUsersRequest) (GetUsersResponse,
 			Score:    repoResponse.Users[i].Score,
 			UserName: repoResponse.Users[i].UserName,
 			Role:     repoResponse.Users[i].Role,
+			StudentNumber: StudentNumber{
+				Year:   repoResponse.Users[i].StudentNumber.Year,
+				Class:  repoResponse.Users[i].StudentNumber.Class,
+				Number: repoResponse.Users[i].StudentNumber.Number,
+			},
 		}
 
 		users = append(users, user)

@@ -8,13 +8,20 @@ type UserRepo struct {
 	Db *sql.DB
 }
 
+type StudentNumber struct {
+	Year   int
+	Class  int
+	Number int
+}
+
 type User struct {
-	Id       string
-	Name     string
-	Score    int
-	UserName string
-	Password string
-	Role     string
+	Id            string
+	Name          string
+	Score         int
+	UserName      string
+	Password      string
+	Role          string
+	StudentNumber StudentNumber
 }
 
 type GetUserRequest struct {
@@ -48,7 +55,7 @@ type GetUsersScoreboardResponse struct {
 }
 
 func (repo *UserRepo) GetUsers(request GetUsersRequest) (GetUsersResponse, error) {
-	rows, err := repo.Db.Query("SELECT id, name, score, username, role FROM users")
+	rows, err := repo.Db.Query("SELECT id, name, score, username, role, student_year, student_class, student_number FROM users")
 
 	if err != nil {
 		return GetUsersResponse{}, err
@@ -59,8 +66,11 @@ func (repo *UserRepo) GetUsers(request GetUsersRequest) (GetUsersResponse, error
 	var users []User
 
 	for rows.Next() {
-		var user User
-		if err := rows.Scan(&user.Id, &user.Name, &user.Score, &user.UserName, &user.Role); err != nil {
+		user := User{
+			StudentNumber: StudentNumber{},
+		}
+		if err := rows.Scan(&user.Id, &user.Name, &user.Score, &user.UserName, &user.Role,
+			&user.StudentNumber.Year, &user.StudentNumber.Class, &user.StudentNumber.Number); err != nil {
 			return GetUsersResponse{}, err
 		}
 		users = append(users, user)
@@ -91,10 +101,14 @@ func (repo *UserRepo) GetUser(request GetUserRequest) (GetUserResponse, error) {
 }
 
 func (repo *UserRepo) GetUserByUserName(request GetUserRequest) (GetUserResponse, error) {
-	row := repo.Db.QueryRow("SELECT id, name, score, username, role FROM users WHERE username = ?", request.UserName)
+	row := repo.Db.QueryRow("SELECT id, name, score, username, role, student_year, student_class, student_number FROM users WHERE username = ?", request.UserName)
 
-	user := User{}
-	if err := row.Scan(&user.Id, &user.Name, &user.Score, &user.UserName, &user.Role); err != nil {
+	user := User{
+		StudentNumber: StudentNumber{},
+	}
+
+	if err := row.Scan(&user.Id, &user.Name, &user.Score, &user.UserName, &user.Role,
+		&user.StudentNumber.Year, &user.StudentNumber.Class, &user.StudentNumber.Number); err != nil {
 		if err == sql.ErrNoRows {
 			return GetUserResponse{}, err
 		}
