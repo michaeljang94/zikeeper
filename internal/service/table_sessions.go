@@ -8,8 +8,10 @@ import (
 )
 
 type TableSessionsService struct {
-	Repo     *repo.TableSessionsRepo
-	UserRepo *repo.UserRepo
+	Repo                  *repo.TableSessionsRepo
+	UserRepo              *repo.UserRepo
+	PlayerSessionsRepo    *repo.PlayerSessionsRepo
+	PlayerSessionsService *PlayerSessionsService
 }
 
 type CreateTableSessionRequest struct {
@@ -274,6 +276,7 @@ type GetTableSessionByDealerRequest struct {
 
 type GetTableSessionByDealerResponse struct {
 	TableSession TableSession `json:"table_session"`
+	Players      []Player     `json:"players"`
 }
 
 func (service *TableSessionsService) GetTableSessionByDealer(request GetTableSessionByDealerRequest) (GetTableSessionByDealerResponse, error) {
@@ -287,6 +290,17 @@ func (service *TableSessionsService) GetTableSessionByDealer(request GetTableSes
 		return GetTableSessionByDealerResponse{}, err
 	}
 
+	// Grab all players in the session
+	playersReq := GetPlayersForSessionIdRequest{
+		SessionId: res.TableSession.SessionId,
+	}
+
+	playersRes, playersErr := service.PlayerSessionsService.GetPlayersForSessionId(playersReq)
+
+	if playersErr != nil {
+		return GetTableSessionByDealerResponse{}, playersErr
+	}
+
 	return GetTableSessionByDealerResponse{
 		TableSession: TableSession{
 			SessionId: res.TableSession.SessionId,
@@ -295,5 +309,6 @@ func (service *TableSessionsService) GetTableSessionByDealer(request GetTableSes
 			Status:    res.TableSession.Status,
 			Pool:      res.TableSession.Pool,
 		},
+		Players: playersRes.Players,
 	}, nil
 }

@@ -103,8 +103,10 @@ func main() {
 		TableSessionsRepo: &tableSessionsRepo,
 	}
 	tableSessionsService := service.TableSessionsService{
-		Repo:     &tableSessionsRepo,
-		UserRepo: &userRepo,
+		Repo:                  &tableSessionsRepo,
+		UserRepo:              &userRepo,
+		PlayerSessionsRepo:    &playerSessionsRepo,
+		PlayerSessionsService: &playerSessionsService,
 	}
 
 	userHandler := handler.UserHandler{
