@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS table_sessions(
     session_id varchar(36) DEFAULT (UUID()),
     dealer varchar(255),
     status ENUM("waiting", "gaming") default ("waiting"),
+    money_pool int default (0),
     CONSTRAINT uc_session_id UNIQUE (session_id),
     CONSTRAINT uc_dealer UNIQUE (dealer)
 );
