@@ -92,7 +92,7 @@ func (repo *TableSessionsRepo) GetTableSessionBySessionId(request GetTableSessio
 	row := repo.Db.QueryRow("SELECT session_id, table_name, dealer FROM table_sessions WHERE session_id = ?", request.SessionId)
 
 	tableSession := TableSession{}
-	if err := row.Scan(&tableSession.SessionId, &tableSession.TableName, tableSession.Dealer); err != nil {
+	if err := row.Scan(&tableSession.SessionId, &tableSession.TableName, &tableSession.Dealer); err != nil {
 		if err == sql.ErrNoRows {
 			return GetTableSessionBySessionIdResponse{}, err
 		}

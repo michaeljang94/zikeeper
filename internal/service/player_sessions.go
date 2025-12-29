@@ -5,8 +5,9 @@ import (
 )
 
 type PlayerSessionsService struct {
-	Repo     *repo.PlayerSessionsRepo
-	UserRepo *repo.UserRepo
+	Repo              *repo.PlayerSessionsRepo
+	UserRepo          *repo.UserRepo
+	TableSessionsRepo *repo.TableSessionsRepo
 }
 
 type AddPlayerToPlayerSessionRequest struct {
@@ -36,6 +37,7 @@ type GetPlayerSessionByUsernameRequest struct {
 
 type GetPlayerSessionByUsernameResponse struct {
 	PlayerSession PlayerSessionObject `json:"player_session"`
+	TableSession  TableSession        `json:"table_session"`
 }
 
 type PlayerSessionObject struct {
@@ -55,11 +57,25 @@ func (service *PlayerSessionsService) GetPlayerSessionByUsername(request GetPlay
 		return GetPlayerSessionByUsernameResponse{}, err
 	}
 
+	// Get table session info
+	tableSessionReq := repo.GetTableSessionBySessionIdRequest{
+		SessionId: res.PlayerSession.SessionId,
+	}
+
+	tableSessionRes, err := service.TableSessionsRepo.GetTableSessionBySessionId(tableSessionReq)
+
+	if err != nil {
+		return GetPlayerSessionByUsernameResponse{}, err
+	}
+
 	return GetPlayerSessionByUsernameResponse{
 		PlayerSession: PlayerSessionObject{
 			SessionId: res.PlayerSession.SessionId,
 			TableName: res.PlayerSession.TableName,
 			Username:  res.PlayerSession.Username,
+		},
+		TableSession: TableSession{
+			Dealer: tableSessionRes.TableSession.Dealer.String,
 		},
 	}, nil
 }

@@ -12,7 +12,7 @@ import (
 var jwtKey = []byte("a-string-secret-at-least-256-bits-long")
 
 func AuthMiddleware() gin.HandlerFunc {
-	defaultRoles := []string{"user", "admin"}
+	defaultRoles := []string{"user", "dealer", "admin"}
 	return AuthMiddlewareWithRoles(defaultRoles)
 }
 
