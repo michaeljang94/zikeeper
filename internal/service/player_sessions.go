@@ -77,6 +77,7 @@ func (service *PlayerSessionsService) GetPlayerSessionByUsername(request GetPlay
 		TableSession: TableSession{
 			Dealer: tableSessionRes.TableSession.Dealer.String,
 			Status: tableSessionRes.TableSession.Status,
+			Pool:   tableSessionRes.TableSession.Pool,
 		},
 	}, nil
 }

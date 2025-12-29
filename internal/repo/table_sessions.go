@@ -14,6 +14,7 @@ type TableSession struct {
 	TableName string
 	Dealer    sql.NullString
 	Status    string
+	Pool      string
 }
 
 type CreateTableSessionRequest struct {
@@ -90,10 +91,10 @@ func (repo *TableSessionsRepo) AddDealerToTableSession(request AddDealerToTableS
 }
 
 func (repo *TableSessionsRepo) GetTableSessionBySessionId(request GetTableSessionBySessionIdRequest) (GetTableSessionBySessionIdResponse, error) {
-	row := repo.Db.QueryRow("SELECT session_id, table_name, dealer, status FROM table_sessions WHERE session_id = ?", request.SessionId)
+	row := repo.Db.QueryRow("SELECT session_id, table_name, dealer, status, money_pool FROM table_sessions WHERE session_id = ?", request.SessionId)
 
 	tableSession := TableSession{}
-	if err := row.Scan(&tableSession.SessionId, &tableSession.TableName, &tableSession.Dealer, &tableSession.Status); err != nil {
+	if err := row.Scan(&tableSession.SessionId, &tableSession.TableName, &tableSession.Dealer, &tableSession.Status, &tableSession.Pool); err != nil {
 		if err == sql.ErrNoRows {
 			return GetTableSessionBySessionIdResponse{}, err
 		}
@@ -105,7 +106,7 @@ func (repo *TableSessionsRepo) GetTableSessionBySessionId(request GetTableSessio
 }
 
 func (repo *TableSessionsRepo) GetTableSessions(request GetTableSessionsRequest) (GetTableSessionsResponse, error) {
-	rows, err := repo.Db.Query("SELECT session_id, table_name, dealer, status FROM table_sessions WHERE table_name = ?", request.TableName)
+	rows, err := repo.Db.Query("SELECT session_id, table_name, dealer, status, money_pool FROM table_sessions WHERE table_name = ?", request.TableName)
 
 	if err != nil {
 		return GetTableSessionsResponse{}, err
@@ -117,7 +118,7 @@ func (repo *TableSessionsRepo) GetTableSessions(request GetTableSessionsRequest)
 	for rows.Next() {
 		var tableSession TableSession
 
-		if err := rows.Scan(&tableSession.SessionId, &tableSession.TableName, &tableSession.Dealer, &tableSession.Status); err != nil {
+		if err := rows.Scan(&tableSession.SessionId, &tableSession.TableName, &tableSession.Dealer, &tableSession.Status, &tableSession.Pool); err != nil {
 			fmt.Println(err)
 			return GetTableSessionsResponse{}, err
 		}
