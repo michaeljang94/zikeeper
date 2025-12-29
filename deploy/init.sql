@@ -9,6 +9,10 @@ CREATE TABLE IF NOT EXISTS users(
     username varchar(255),
     password varchar(255),
     pincode varchar(255),
+    student_year int,
+    student_class int,
+    student_number int,
+    role ENUM("user", "dealer", "admin"),
     PRIMARY KEY (id),
     CONSTRAINT uc_username UNIQUE (username)
 );

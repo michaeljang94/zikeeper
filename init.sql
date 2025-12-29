@@ -9,6 +9,9 @@ CREATE TABLE IF NOT EXISTS users(
     username varchar(255),
     password varchar(255),
     pincode varchar(255),
+    student_year int,
+    student_class int,
+    student_number int,
     role ENUM("user", "dealer", "admin"),
     PRIMARY KEY (id),
     CONSTRAINT uc_username UNIQUE (username)
@@ -38,7 +41,7 @@ CREATE TABLE IF NOT EXISTS table_sessions(
 );
 
 INSERT INTO users
-VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668266", "admin", 0, "admin", "12345", "12345", "admin");
+VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668266", "admin", 0, "admin", "12345", "12345", 0, 0, 0, "admin");
 
 -- INSERT INTO tables
 -- VALUES ("1cb4a8ea-3cfb-4283-b400-2e21b7668266", "Table1", "black_jack");
