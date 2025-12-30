@@ -199,3 +199,28 @@ func (handler *UserHandler) WSUpdateScoreboard(c *gin.Context) {
 		time.Sleep(time.Second * 5)
 	}
 }
+
+func (handler *UserHandler) TransferScoreByUsername(c *gin.Context) {
+	id := c.Param("id")
+
+	request := service.TransferScoreByUsernameRequest{
+		From: id,
+	}
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	response, err := handler.Service.TransferScoreByUsername(request)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}

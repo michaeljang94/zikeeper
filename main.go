@@ -151,6 +151,8 @@ func main() {
 	roleProtected.GET("/api/users", userHandler.GetUsers)
 	roleProtected.POST("/api/user/:id/update", userHandler.UpdateUserByUsername)
 
+	dealerProtected.POST("/api/user/:id/send", userHandler.TransferScoreByUsername)
+
 	// Unprotected
 	router.GET("/api/public/scoreboard", userHandler.WSUpdateScoreboard)
 	router.GET("/api/users/scoreboard", userHandler.GetUsersScoreboard)

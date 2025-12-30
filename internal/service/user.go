@@ -212,3 +212,28 @@ func (service *UserService) GetPlayerRankingByUsername(request GetPlayerRankingB
 		},
 	}, nil
 }
+
+type TransferScoreByUsernameRequest struct {
+	From   string
+	To     string `json:"to"`
+	Amount int    `json:"amount"`
+}
+
+type TransferScoreByUsernameResponse struct {
+}
+
+func (service *UserService) TransferScoreByUsername(request TransferScoreByUsernameRequest) (TransferScoreByUsernameResponse, error) {
+	req := repo.TransferScoreByUsernameRequest{
+		From:   request.From,
+		To:     request.To,
+		Amount: request.Amount,
+	}
+
+	_, err := service.Repo.TransferScoreByUsername(req)
+
+	if err != nil {
+		return TransferScoreByUsernameResponse{}, err
+	}
+
+	return TransferScoreByUsernameResponse{}, nil
+}

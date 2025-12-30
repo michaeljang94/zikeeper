@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"database/sql"
 )
 
@@ -187,4 +188,77 @@ func (repo *UserRepo) GetPlayerRankingByUsername(request GetPlayerRankingByUsern
 	return GetPlayerRankingByUsernameResponse{
 		User: user,
 	}, nil
+}
+
+type TransferScoreByUsernameRequest struct {
+	From   string
+	To     string
+	Amount int
+}
+
+type TransferScoreByUsernameResponse struct {
+}
+
+func (repo *UserRepo) TransferScoreByUsername(request TransferScoreByUsernameRequest) (TransferScoreByUsernameResponse, error) {
+	ctx := context.Background()
+
+	tx, err := repo.Db.BeginTx(ctx, nil)
+
+	if err != nil {
+		return TransferScoreByUsernameResponse{}, err
+	}
+
+	// Get score value of A
+	// row := repo.Db.QueryRow("SELECT * FROM users WHERE id = ?", request.Id)
+	fromRes := tx.QueryRow("SELECT score FROM users WHERE username = ?", request.From)
+	fromUser := User{}
+	if err := fromRes.Scan(&fromUser.Score); err != nil {
+		if err == sql.ErrNoRows {
+			return TransferScoreByUsernameResponse{}, err
+		}
+	}
+
+	if err != nil {
+		return TransferScoreByUsernameResponse{}, err
+	}
+
+	// Get score value of B
+	toRes := tx.QueryRow("SELECT score FROM users WHERE username = ?", request.To)
+
+	if err != nil {
+		return TransferScoreByUsernameResponse{}, err
+	}
+
+	toUser := User{}
+	if err := toRes.Scan(&toUser.Score); err != nil {
+		if err == sql.ErrNoRows {
+			return TransferScoreByUsernameResponse{}, err
+		}
+	}
+
+	newFromScore := fromUser.Score - request.Amount
+	newToScore := toUser.Score + request.Amount
+
+	// Remove from A
+	_, err = tx.ExecContext(ctx, "UPDATE users SET score = ? WHERE username = ?", newFromScore, request.From)
+
+	if err != nil {
+		tx.Rollback()
+		return TransferScoreByUsernameResponse{}, err
+	}
+
+	// Add to B
+	_, err = tx.ExecContext(ctx, "UPDATE users SET score = ? WHERE username = ?", newToScore, request.To)
+
+	if err != nil {
+		tx.Rollback()
+		return TransferScoreByUsernameResponse{}, err
+	}
+
+	txErr := tx.Commit()
+	if txErr != nil {
+		return TransferScoreByUsernameResponse{}, txErr
+	}
+
+	return TransferScoreByUsernameResponse{}, nil
 }
