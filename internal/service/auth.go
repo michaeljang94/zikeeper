@@ -96,7 +96,7 @@ func (service *AuthService) AuthenticateUser(request AuthenticateUserRequest) (A
 	}
 
 	iat := time.Now().UTC()
-	exp := iat.Add(time.Hour)
+	exp := iat.Add(time.Hour * 24)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"iat":      iat.UnixMilli(),
 		"exp":      exp.UnixMilli(),
