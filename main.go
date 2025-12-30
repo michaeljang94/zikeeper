@@ -171,11 +171,11 @@ func main() {
 
 	// Sessions
 	dealerProtected.GET("/api/dealer/:id/session", tableSessionsHandler.GetTableSessionByDealer)
-	roleProtected.GET("/api/table/:table_name/session/:session_id/players", playerSessionsHandler.GetPlayersForSessionId)
-	roleProtected.POST("/api/table/:table_name/session/:session_id/player/add", playerSessionsHandler.AddPlayerToPlayerSession)
-	roleProtected.POST("/api/table/:table_name/session/:session_id/player/delete", playerSessionsHandler.DeletePlayerFromPlayerSession)
-
+	dealerProtected.POST("/api/table/:table_name/session/:session_id/player/add", playerSessionsHandler.AddPlayerToPlayerSession)
 	dealerProtected.POST("/api/table/:table_name/session/:session_id/status/update", tableSessionsHandler.UpdateTableSessionStatusBySessionId)
+	dealerProtected.POST("/api/table/:table_name/session/:session_id/player/delete", playerSessionsHandler.DeletePlayerFromPlayerSession)
+
+	roleProtected.GET("/api/table/:table_name/session/:session_id/players", playerSessionsHandler.GetPlayersForSessionId)
 
 	router.Run()
 	// log.Fatal(autotls.Run(router, "api.zikeeper.com", "zikeeper.com"))
