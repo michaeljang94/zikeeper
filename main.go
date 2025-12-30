@@ -149,7 +149,7 @@ func main() {
 	protected.GET("/api/user/:id/session", userHandler.GetSessionInfoByUsername)
 	protected.GET("/api/user/:id/rank", userHandler.GetPlayerRankingByUsername)
 	roleProtected.GET("/api/users", userHandler.GetUsers)
-	roleProtected.GET("/api/users/scoreboard", userHandler.GetUsersScoreboard)
+	router.GET("/api/users/scoreboard", userHandler.GetUsersScoreboard)
 	roleProtected.POST("/api/user/:id/update", userHandler.UpdateUserByUsername)
 
 	// Tables
