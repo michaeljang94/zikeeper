@@ -312,3 +312,26 @@ func (service *TableSessionsService) GetTableSessionByDealer(request GetTableSes
 		Players: playersRes.Players,
 	}, nil
 }
+
+type UpdateTableSessionStatusBySessionIdRequest struct {
+	SessionId string
+	Status    string `json:"status"`
+}
+
+type UpdateTableSessionStatusBySessionIdResponse struct {
+}
+
+func (service *TableSessionsService) UpdateTableSessionStatusBySessionId(request UpdateTableSessionStatusBySessionIdRequest) (UpdateTableSessionStatusBySessionIdResponse, error) {
+	req := repo.UpdateTableSessionStatusBySessionIdRequest{
+		SessionId: request.SessionId,
+		Status:    request.Status,
+	}
+
+	_, err := service.Repo.UpdateTableSessionStatusBySessionId(req)
+
+	if err != nil {
+		return UpdateTableSessionStatusBySessionIdResponse{}, err
+	}
+
+	return UpdateTableSessionStatusBySessionIdResponse{}, nil
+}

@@ -185,3 +185,21 @@ func (repo *TableSessionsRepo) GetTableSessionByDealer(request GetTableSessionBy
 		TableSession: tableSession,
 	}, nil
 }
+
+type UpdateTableSessionStatusBySessionIdRequest struct {
+	SessionId string
+	Status    string
+}
+
+type UpdateTableSessionStatusBySessionIdResponse struct {
+}
+
+func (repo *TableSessionsRepo) UpdateTableSessionStatusBySessionId(request UpdateTableSessionStatusBySessionIdRequest) (UpdateTableSessionStatusBySessionIdResponse, error) {
+	_, err := repo.Db.Exec("UPDATE table_sessions SET status = ? WHERE session_id = ?", request.Status, request.SessionId)
+
+	if err != nil {
+		return UpdateTableSessionStatusBySessionIdResponse{}, err
+	}
+
+	return UpdateTableSessionStatusBySessionIdResponse{}, nil
+}

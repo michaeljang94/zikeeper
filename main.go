@@ -138,7 +138,7 @@ func main() {
 
 	protected := router.Group("/", handler.AuthMiddleware())
 	roleProtected := router.Group("/", handler.AuthMiddlewareWithRoles([]string{"admin"}))
-	dealerProtected := router.Group("/", handler.AuthMiddlewareWithRoles([]string{"dealer"}))
+	dealerProtected := router.Group("/", handler.AuthMiddlewareWithRoles([]string{"dealer", "admin"}))
 
 	// Update player bet
 	// Update total pool
@@ -171,6 +171,8 @@ func main() {
 	roleProtected.GET("/api/table/:table_name/session/:session_id/players", playerSessionsHandler.GetPlayersForSessionId)
 	roleProtected.POST("/api/table/:table_name/session/:session_id/player/add", playerSessionsHandler.AddPlayerToPlayerSession)
 	roleProtected.POST("/api/table/:table_name/session/:session_id/player/delete", playerSessionsHandler.DeletePlayerFromPlayerSession)
+
+	dealerProtected.POST("/api/table/:table_name/session/:session_id/status/update", tableSessionsHandler.UpdateTableSessionStatusBySessionId)
 
 	router.Run()
 	// log.Fatal(autotls.Run(router, "api.zikeeper.com", "zikeeper.com"))

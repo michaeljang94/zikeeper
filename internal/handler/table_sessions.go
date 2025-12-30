@@ -160,3 +160,27 @@ func (handler *TableSessionsHandler) GetTableSessionByDealer(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response)
 }
+
+func (handler *TableSessionsHandler) UpdateTableSessionStatusBySessionId(c *gin.Context) {
+	request := service.UpdateTableSessionStatusBySessionIdRequest{
+		SessionId: c.Param("session_id"),
+	}
+
+	// Grab the status. waiting | gaming
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	response, err := handler.Service.UpdateTableSessionStatusBySessionId(request)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status": "error",
+			"error":  err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}
