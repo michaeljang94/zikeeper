@@ -167,6 +167,7 @@ func main() {
 	roleProtected.POST("/api/table/delete", tableHandler.DeleteTable)
 
 	// Sessions
+	router.GET("/api/public/scoreboard", userHandler.WSUpdateScoreboard)
 	dealerProtected.GET("/api/dealer/:id/session", tableSessionsHandler.GetTableSessionByDealer)
 	roleProtected.GET("/api/table/:table_name/session/:session_id/players", playerSessionsHandler.GetPlayersForSessionId)
 	roleProtected.POST("/api/table/:table_name/session/:session_id/player/add", playerSessionsHandler.AddPlayerToPlayerSession)

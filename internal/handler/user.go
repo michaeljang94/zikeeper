@@ -1,9 +1,12 @@
 package handler
 
 import (
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	"github.com/michaeljang94/zikeeper/internal/service"
 )
 
@@ -162,4 +165,37 @@ func (handler *UserHandler) GetPlayerRankingByUsername(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, res)
+}
+
+func (handler *UserHandler) WSUpdateScoreboard(c *gin.Context) {
+	upgrader := websocket.Upgrader{
+		// TODO: Fix this, actually trust a origin
+		CheckOrigin: func(r *http.Request) bool { return true },
+	}
+
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	defer conn.Close()
+
+	for {
+		req := service.GetUsersScoreboardRequest{
+			Limit: 10,
+		}
+
+		res, err := handler.Service.GetUsersScoreboard(req)
+
+		if err != nil {
+			log.Println(err)
+			break
+		}
+
+		conn.WriteJSON(res)
+
+		time.Sleep(time.Second * 5)
+	}
 }
