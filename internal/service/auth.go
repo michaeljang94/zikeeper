@@ -105,7 +105,7 @@ func (service *AuthService) AuthenticateUser(request AuthenticateUserRequest) (A
 	})
 
 	// TODO change this
-	key := "a-string-secret-at-least-256-bits-long"
+	key := "mxwI8s8mlZo7NSgkvKBBO4BOjFXV4IT8"
 	tokenString, err := token.SignedString([]byte(key))
 
 	if err != nil {

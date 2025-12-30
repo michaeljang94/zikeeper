@@ -9,7 +9,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtKey = []byte("a-string-secret-at-least-256-bits-long")
+var jwtKey = []byte("mxwI8s8mlZo7NSgkvKBBO4BOjFXV4IT8")
 
 func AuthMiddleware() gin.HandlerFunc {
 	defaultRoles := []string{"user", "dealer", "admin"}
