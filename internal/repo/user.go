@@ -236,6 +236,7 @@ func (repo *UserRepo) TransferScoreByUsername(request TransferScoreByUsernameReq
 		}
 	}
 
+	// TODO check that these dont overflow to negative
 	newFromScore := fromUser.Score - request.Amount
 	newToScore := toUser.Score + request.Amount
 
